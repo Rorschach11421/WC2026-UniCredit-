@@ -149,6 +149,7 @@
   .pchip{display:inline-flex;align-items:baseline;gap:6px;border-radius:8px;padding:5px 9px;font-size:12.5px;border:1px solid transparent;transition:transform .12s}
   .pchip b{font-weight:600;color:var(--ink);font-size:12.5px}
   .pchip s{font-family:'Oswald',sans-serif;font-weight:600;text-decoration:none;font-size:13px}
+  .pchip .od{color:var(--muted-2);font-size:11px;font-style:normal}
   .pchip.hl{outline:2px solid var(--gold);outline-offset:1px;transform:translateY(-1px)}
   .pchip.hit{box-shadow:0 0 0 1.5px var(--mint) inset}
   .pchip.miss{opacity:.42}
@@ -160,6 +161,13 @@
   .t3{background:rgba(251,146,60,.16)}.t3 s{color:#fcc08a}
   .t4{background:rgba(244,114,182,.16)}.t4 s{color:#f6b6da}
   .empty{padding:30px 18px;text-align:center;color:var(--muted)}
+  .stats-title{font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:.12em;text-transform:uppercase;font-size:12px;color:var(--gold);margin:26px 0 12px}
+  .stats-intro{color:var(--muted);font-size:14px;margin:0 0 18px}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:start}
+  .stat{background:var(--pitch-850);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+  .stat-h{font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .stat-v{font-family:'Oswald',sans-serif;font-weight:700;font-size:23px;color:#fff;margin:7px 0 3px;display:flex;align-items:center;gap:8px;min-height:30px}
+  .stat-s{font-size:12.5px;color:var(--muted)}
   footer{text-align:center;color:var(--muted-2);font-size:12.5px;margin-top:26px;line-height:1.7}
   footer b{color:var(--muted)}
 
@@ -187,6 +195,7 @@
   <nav class="tabs" role="tablist">
     <button class="tab" role="tab" id="tab-plasman" aria-selected="true" aria-controls="view-plasman">Plasman</button>
     <button class="tab" role="tab" id="tab-prognoze" aria-selected="false" aria-controls="view-prognoze">Prognoze</button>
+    <button class="tab" role="tab" id="tab-statistika" aria-selected="false" aria-controls="view-statistika">Statistika</button>
   </nav>
 
   <!-- PLASMAN -->
@@ -198,19 +207,7 @@
       </div>
       <div id="rows"></div>
     </div>
-    <details class="upd">
-      <summary>↻ Unesi rezultate mečeva <span class="chev">▾</span></summary>
-      <div class="upd-body">
-        <p>Upiši rezultat po liniji u formatu <code>broj_meča rezultat</code>, npr. <code>3 1-0</code>. Plasman i pogoci se preračunaju automatski. (Brojevi mečeva su na kartici „Prognoze".)</p>
-        <textarea id="scoreIn" placeholder="3 1-0&#10;4 2-2&#10;5 0-1"></textarea>
-        <div class="upd-actions">
-          <button class="btn primary" id="applyScores">Primeni rezultate</button>
-          <button class="btn" id="copyScores">Kopiraj scores.json</button>
-        </div>
-        <p class="note">Za potpunu automatizaciju (bez ručnog unosa) rezultati mogu da se čitaju iz fajla <code>scores.json</code> pored stranice — taj fajl može da popunjava automatska skripta. „Kopiraj scores.json" ti daje trenutni sadržaj tog fajla.</p>
-      </div>
-    </details>
-  </section>
+      </section>
 
   <!-- PROGNOZE -->
   <section class="view" id="view-prognoze" role="tabpanel" aria-labelledby="tab-prognoze">
@@ -231,6 +228,10 @@
     <div id="cards"></div>
   </section>
 
+  <section class="view" id="view-statistika" role="tabpanel" aria-labelledby="tab-statistika">
+    <p class="stats-intro">Sve se računa iz prognoza, rezultata i kvota — i osvežava kako stižu rezultati.</p>
+    <div class="stats" id="stats"></div>
+  </section>
   <footer>
     <b>UniCredit Takmičenje</b> · Svetsko prvenstvo 2026<br>
     Bodovi se računaju iz rezultata × koeficijent pogođenog tipa · 72 meča grupne faze.
@@ -308,31 +309,45 @@ function renderRows(list){
 function renderPlasman(){
   const list=standings();
   renderRows(list);
+  renderStats();
   const lead=list[0];
   if(lead) document.getElementById("leadLine").innerHTML=`Vodi <b style="color:var(--gold)">${lead.name}</b> sa ${fmt(lead.points)} bodova.`;
   document.getElementById("statusTxt").textContent=`Odigrano ${playedCount()}/${DB.matches.length} mečeva`;
 }
 
-/* unos rezultata */
-function parseScores(txt){
-  const res={};
-  txt.split(/\r?\n/).forEach(line=>{
-    const m=line.match(/^\s*(\d{1,2})\D+(\d+)\s*[-:]\s*(\d+)/);
-    if(m) res[+m[1]]=[+m[2],+m[3]];
+/* ----- statistika ----- */
+function renderStats(){
+  const played = DB.matches.filter(m=>scoreOf(m)).sort((a,b)=>a.n-b.n);
+  const el=document.getElementById("stats");
+  if(!el) return;
+  if(!played.length){ el.innerHTML='<div class="empty">Statistika će se pojaviti kad počnu rezultati.</div>'; return; }
+  const DASH="\u2014", DOT=" \u00b7 ", EN="\u2013";
+  const P = DB.players.map(p=>{
+    let hits=0,tips=0,runH=0,curH=0,runM=0,curM=0;
+    played.forEach(m=>{
+      const pk=m.picks[p.nick]; if(pk===undefined) return;
+      tips++;
+      if(isHit(pk,scoreOf(m))){hits++;curH++;curM=0;if(curH>runH)runH=curH;}
+      else{curM++;curH=0;if(curM>runM)runM=curM;}
+    });
+    return {name:p.name,hits,tips,rate:tips?hits/tips:0,runH,runM};
   });
-  return res;
+  const names = w => w.map(x=>x.name).join(", ");
+  const leadBy = k => { const mx=Math.max(...P.map(x=>x[k])); return {val:mx, who:P.filter(x=>x[k]===mx)}; };
+  const pr=leadBy("rate"), rh=leadBy("runH"), rm=leadBy("runM");
+  let bo=0, bev=[];
+  played.forEach(m=>DB.players.forEach(p=>{const pk=m.picks[p.nick]; if(pk===undefined)return;
+    if(isHit(pk,scoreOf(m))){const o=m.odds[pk]||0; if(o>bo){bo=o;bev=[];} if(o===bo) bev.push({name:p.name,pick:pk,match:m.t1+EN+m.t2});}}));
+  const w0=pr.who[0];
+  const card=(i,l,v,s)=>`<div class="stat"><div class="stat-h">${i} ${l}</div><div class="stat-v">${v}</div><div class="stat-s">${s}</div></div>`;
+  const ulovSub = bev.length===1 ? `${bev[0].name}${DOT}tip ${bev[0].pick}${DOT}${bev[0].match}`
+                                 : bev.map(e=>`${e.name} (${e.pick}, ${e.match})`).join(", ");
+  el.innerHTML=
+    card("\uD83C\uDFAF","Najprecizniji", `${Math.round(pr.val*100)}% (${w0.hits}/${w0.tips})`, names(pr.who))+
+    card("\uD83D\uDCB0","Najveći ulov", bo?bo.toFixed(1):DASH, bo?ulovSub:DASH)+
+    card("\uD83D\uDD25","Najduži niz pogodaka", rh.val||0, rh.val?names(rh.who):DASH)+
+    card("\u2744\uFE0F","Najhladniji niz", rm.val||0, rm.val?names(rm.who):DASH);
 }
-document.getElementById("applyScores").addEventListener("click",()=>{
-  const got=parseScores(document.getElementById("scoreIn").value);
-  if(!Object.keys(got).length){alert("Format: broj_meča rezultat, npr.  3 1-0");return;}
-  Object.assign(SCORES,got);
-  document.getElementById("scoreIn").value="";
-  renderPlasman(); if(prognozeReady) renderCards();
-});
-document.getElementById("copyScores").addEventListener("click",()=>{
-  const txt=JSON.stringify(SCORES,null,2);
-  navigator.clipboard.writeText(txt).then(()=>{const b=document.getElementById("copyScores");b.textContent="Kopirano ✓";setTimeout(()=>b.textContent="Kopiraj scores.json",1600);}).catch(()=>{});
-});
 
 /* ----- PROGNOZE ----- */
 const TCLASS={"1":"t1","X":"tX","2":"t2","0-1":"t01","0-2":"t02","3+":"t3","4+":"t4"};
@@ -365,7 +380,7 @@ function renderCards(){
     const score=s?`<span class="vs scr">${s[0]} : ${s[1]}</span>`:`<span class="vs">vs</span>`;
     const chips=DB.players.map(p=>{const pk=m.picks[p.nick]; if(pk===undefined)return"";
       const cls=TCLASS[pk]||""; let extra=""; if(s) extra=isHit(pk,s)?" hit":" miss"; if(hl&&p.nick===hl) extra+=" hl";
-      return `<span class="pchip ${cls}${extra}" title="${p.name} · tip ${pk}"><b>${p.nick}</b><s>${pk}</s></span>`;}).join("");
+      return `<span class="pchip ${cls}${extra}" title="${p.name} · tip ${pk}"><b>${p.nick}</b><s>${pk}</s><span class="od">(${m.odds[pk]})</span></span>`;}).join("");
     return `<div class="mcard ${s?'done':''}" style="animation-delay:${delay}ms">
       <div class="mtop"><span class="mnum">#${m.n}</span><span class="mgrp">Grupa ${m.grp}</span><span class="mdate">${m.date} · ${m.time}</span></div>
       <div class="mteams"><div class="tm home"><span class="nm">${m.t1}</span><span class="fl">${flag(m.t1)}</span></div>
@@ -374,11 +389,12 @@ function renderCards(){
 }
 
 /* ----- tabovi ----- */
-const tabs=[["tab-plasman","view-plasman"],["tab-prognoze","view-prognoze"]];
+const tabs=[["tab-plasman","view-plasman"],["tab-prognoze","view-prognoze"],["tab-statistika","view-statistika"]];
 function selectTab(id){
   tabs.forEach(([t,v])=>{const on=t===id;document.getElementById(t).setAttribute("aria-selected",on?"true":"false");document.getElementById(v).classList.toggle("active",on);});
   if(id==="tab-prognoze"&&!prognozeReady){initPrognoze();renderCards();prognozeReady=true;}
-  history.replaceState(null,"",id==="tab-prognoze"?"#prognoze":"#plasman");
+  if(id==="tab-statistika") renderStats();
+  history.replaceState(null,"",{"tab-plasman":"#plasman","tab-prognoze":"#prognoze","tab-statistika":"#statistika"}[id]);
 }
 tabs.forEach(([t])=>document.getElementById(t).addEventListener("click",()=>selectTab(t)));
 
@@ -388,7 +404,7 @@ fetch("./scores.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{
 }).catch(()=>{});
 
 renderPlasman();
-if(location.hash==="#prognoze") selectTab("tab-prognoze");
+if(location.hash==="#prognoze") selectTab("tab-prognoze"); else if(location.hash==="#statistika") selectTab("tab-statistika");
 </script>
 </body>
 </html>
