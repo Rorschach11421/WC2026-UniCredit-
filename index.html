@@ -82,7 +82,8 @@
   .row .r-pick .flagi{width:28px;height:21px}
   .tm .flagi{width:28px;height:21px}
   /* divider after 8th place */
-  .split{height:0;border-top:5px solid #e2001a}
+  .split{display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 18px;background:rgba(226,0,26,.07);border-top:4px solid #e2001a}
+  .split span{font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:12px;color:#ff7a7a;white-space:nowrap;text-align:center}
 
   details.upd{margin-top:22px;background:var(--pitch-850);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
   details.upd summary{list-style:none;cursor:pointer;padding:15px 18px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;color:var(--ink);user-select:none}
@@ -190,7 +191,6 @@
 
   <!-- PLASMAN -->
   <section class="view active" id="view-plasman" role="tabpanel" aria-labelledby="tab-plasman">
-    <section class="podium" id="podium" aria-label="Prva tri mesta"></section>
     <div class="table" role="table" aria-label="Plasman">
       <div class="thead" role="row">
         <div role="columnheader">#</div><div role="columnheader">Takmičar</div>
@@ -295,19 +295,19 @@ function renderRows(list){
   let html="";
   list.forEach((d,idx)=>{
     const w=Math.max(4,(d.points/max)*100), delay=reduceMotion?0:Math.min(idx*30,460);
-    html+=`<div class="row ${d.rank<=3?'top':''}" style="animation-delay:${delay}ms">
+    html+=`<div class="row" style="animation-delay:${delay}ms">
       <div class="r-rank">${d.rank}</div>
       <div class="r-name"><b>${d.name}</b><div class="r-bar"><i data-w="${w}"></i></div></div>
       <div class="r-pts">${fmt(d.points)}</div>
       <div class="r-pick" title="Osvajač: ${CHAMP_NAME[d.champ]||d.champ}">${flag2(d.champ)}</div></div>`;
-    if(d.rank===8) html+=`<div class="split"></div>`;
+    if(d.rank===8) html+=`<div class="split"><span>Ispod crte časte u Zapati</span></div>`;
   });
   const el=document.getElementById("rows"); el.innerHTML=html;
   requestAnimationFrame(()=>el.querySelectorAll(".r-bar i").forEach(b=>b.style.width=b.dataset.w+"%"));
 }
 function renderPlasman(){
   const list=standings();
-  renderPodium(list); renderRows(list);
+  renderRows(list);
   const lead=list[0];
   if(lead) document.getElementById("leadLine").innerHTML=`Vodi <b style="color:var(--gold)">${lead.name}</b> sa ${fmt(lead.points)} bodova.`;
   document.getElementById("statusTxt").textContent=`Odigrano ${playedCount()}/${DB.matches.length} mečeva`;
