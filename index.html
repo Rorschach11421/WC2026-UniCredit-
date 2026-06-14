@@ -168,6 +168,42 @@
   .stat-h{font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
   .stat-v{font-family:'Oswald',sans-serif;font-weight:700;font-size:23px;color:#fff;margin:7px 0 3px;display:flex;align-items:center;gap:8px;min-height:30px}
   .stat-s{font-size:12.5px;color:var(--muted)}
+  .row{cursor:pointer}
+  .pmodal[hidden]{display:none}
+  .pmodal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px}
+  .pmodal-bg{position:absolute;inset:0;background:rgba(3,12,9,.72)}
+  .pmodal-card{position:relative;background:var(--pitch-850);border:1px solid var(--line-strong);border-radius:16px;max-width:560px;width:100%;max-height:85vh;overflow:auto;box-shadow:var(--shadow);padding:18px}
+  .pmodal-x{position:absolute;top:8px;right:12px;background:none;border:none;color:var(--muted);font-size:26px;line-height:1;cursor:pointer}
+  .pmodal-x:hover{color:var(--ink)}
+  .pm-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-right:28px}
+  .pm-head b{font-size:18px;font-weight:600}
+  .pm-sub{color:var(--muted);font-size:13px;margin-top:2px}
+  .pm-list{display:flex;flex-direction:column;gap:6px}
+  .pm-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 10px;border:1px solid var(--line);border-radius:9px;font-size:13px}
+  .pm-row.hit{border-color:rgba(62,224,166,.3);background:rgba(62,224,166,.05)}
+  .pm-row.miss{opacity:.6}
+  .pm-n{font-family:'Oswald',sans-serif;color:var(--gold);font-weight:600;font-size:12px;min-width:24px}
+  .pm-teams{flex:1;min-width:150px;display:flex;align-items:center;gap:6px}
+  .pm-teams i{color:var(--muted-2);font-style:normal}
+  .pm-res{font-family:'Oswald',sans-serif;color:#fff;background:var(--pitch-900);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-size:12px}
+  .pm-row .pchip{margin-left:auto}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--pitch-850)}
+  .segb{background:none;border:none;border-right:1px solid var(--line);color:var(--muted);font-family:inherit;font-size:13.5px;font-weight:600;padding:11px 14px;cursor:pointer}
+  .segb:last-child{border-right:none}
+  .segb:hover{color:var(--ink)}
+  .segb[aria-pressed="true"]{background:var(--gold);color:#21180a}
+  .segb:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  .race-ctrl{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .race-ctrl input[type=range]{flex:1;min-width:140px;accent-color:var(--gold)}
+  .race-label{font-family:'Oswald',sans-serif;font-weight:600;font-size:13px;color:var(--muted);white-space:nowrap}
+  .race{position:relative}
+  .race-row{position:absolute;left:0;right:0;height:30px;display:flex;align-items:center;gap:8px;transition:transform .6s cubic-bezier(.22,.7,.2,1)}
+  .race-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-weight:700;font-size:10px;color:#0b1f17;flex:none}
+  .race-name{font-size:12.5px;width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:none}
+  .race-track{flex:1;height:15px;background:rgba(255,255,255,.05);border-radius:8px;overflow:hidden}
+  .race-fill{height:100%;border-radius:8px;width:0;transition:width .6s cubic-bezier(.22,.7,.2,1)}
+  .race-pts{font-family:'Oswald',sans-serif;font-weight:700;font-size:13px;color:#fff;width:34px;text-align:right;flex:none}
+  @media (max-width:560px){.race-name{width:74px}.pm-teams{min-width:120px}}
   footer{text-align:center;color:var(--muted-2);font-size:12.5px;margin-top:26px;line-height:1.7}
   footer b{color:var(--muted)}
 
@@ -196,6 +232,7 @@
     <button class="tab" role="tab" id="tab-plasman" aria-selected="true" aria-controls="view-plasman">Plasman</button>
     <button class="tab" role="tab" id="tab-prognoze" aria-selected="false" aria-controls="view-prognoze">Prognoze</button>
     <button class="tab" role="tab" id="tab-statistika" aria-selected="false" aria-controls="view-statistika">Statistika</button>
+    <button class="tab" role="tab" id="tab-kretanje" aria-selected="false" aria-controls="view-kretanje">Trka za Vrh</button>
   </nav>
 
   <!-- PLASMAN -->
@@ -217,7 +254,7 @@
         <input id="msearch" type="search" placeholder="Pretraži reprezentaciju…" autocomplete="off" aria-label="Pretraga timova">
       </label>
       <select class="hl" id="hlPlayer" aria-label="Istakni takmičara"><option value="">Istakni takmičara…</option></select>
-      <label class="toggle"><input type="checkbox" id="onlyPlayed"><span>Samo odigrani</span></label>
+      <div class="seg" id="playedFilter" role="group" aria-label="Filter odigranih"><button class="segb" data-pf="all" aria-pressed="true">Sve</button><button class="segb" data-pf="played" aria-pressed="false">Odigrani</button><button class="segb" data-pf="unplayed" aria-pressed="false">Neodigrani</button></div>
     </div>
     <div class="grpbar" id="grpbar"></div>
     <div class="legend">
@@ -232,6 +269,24 @@
     <p class="stats-intro">Sve se računa iz prognoza, rezultata i kvota — i osvežava kako stižu rezultati.</p>
     <div class="stats" id="stats"></div>
   </section>
+  <section class="view" id="view-kretanje" role="tabpanel" aria-labelledby="tab-kretanje">
+    <p class="stats-intro">Kako se plasman menjao meč po meč. Pusti animaciju ili prevuci klizač.</p>
+    <div class="race-ctrl">
+      <button class="btn" id="racePlay">▶ Pusti</button>
+      <input type="range" id="raceSlider" min="1" max="1" value="1" step="1" aria-label="Meč">
+      <span class="race-label" id="raceLabel">—</span>
+    </div>
+    <div class="race" id="race"></div>
+  </section>
+
+  <div class="pmodal" id="pmodal" hidden>
+    <div class="pmodal-bg" data-close></div>
+    <div class="pmodal-card">
+      <button class="pmodal-x" data-close aria-label="Zatvori">×</button>
+      <div id="pmodal-body"></div>
+    </div>
+  </div>
+
   <footer>
     <b>UniCredit Takmičenje</b> · Svetsko prvenstvo 2026<br>
     Bodovi se računaju iz rezultata × koeficijent pogođenog tipa · 72 meča grupne faze.
@@ -265,7 +320,7 @@ function standings(){
     DB.matches.forEach(m=>{const s=scoreOf(m); if(!s)return; const pk=m.picks[p.nick];
       if(pk && isHit(pk,s)) pts += (m.odds[pk]||0);});
     if(CHAMPION && p.champ===CHAMPION) pts += (DB.bonus[p.champ]||0);
-    return {name:p.name, champ:p.champ, points:r1(pts)};
+    return {name:p.name, nick:p.nick, champ:p.champ, points:r1(pts)};
   });
   return rows.map((d,i)=>({...d,_i:i})).sort((a,b)=> b.points-a.points || a._i-b._i).map((d,i)=>({...d,rank:i+1}));
 }
@@ -296,7 +351,7 @@ function renderRows(list){
   let html="";
   list.forEach((d,idx)=>{
     const w=Math.max(4,(d.points/max)*100), delay=reduceMotion?0:Math.min(idx*30,460);
-    html+=`<div class="row" style="animation-delay:${delay}ms">
+    html+=`<div class="row" data-nick="${d.nick}" style="animation-delay:${delay}ms">
       <div class="r-rank">${d.rank}</div>
       <div class="r-name"><b>${d.name}</b><div class="r-bar"><i data-w="${w}"></i></div></div>
       <div class="r-pts">${fmt(d.points)}</div>
@@ -304,6 +359,7 @@ function renderRows(list){
     if(d.rank===8) html+=`<div class="split"><span>Ispod crte časte u Zapati</span></div>`;
   });
   const el=document.getElementById("rows"); el.innerHTML=html;
+  el.onclick=e=>{const r=e.target.closest(".row"); if(r&&r.dataset.nick) openPlayer(r.dataset.nick);};
   requestAnimationFrame(()=>el.querySelectorAll(".r-bar i").forEach(b=>b.style.width=b.dataset.w+"%"));
 }
 function renderPlasman(){
@@ -351,7 +407,7 @@ function renderStats(){
 
 /* ----- PROGNOZE ----- */
 const TCLASS={"1":"t1","X":"tX","2":"t2","0-1":"t01","0-2":"t02","3+":"t3","4+":"t4"};
-let grpFilter="*", prognozeReady=false;
+let grpFilter="*", playedF="all", prognozeReady=false;
 function initPrognoze(){
   const groups=[...new Set(DB.matches.map(m=>m.grp))];
   const gb=document.getElementById("grpbar");
@@ -363,15 +419,14 @@ function initPrognoze(){
   DB.players.forEach(p=>{const o=document.createElement("option");o.value=p.nick;o.textContent=p.name;sel.appendChild(o);});
   sel.addEventListener("change",renderCards);
   document.getElementById("msearch").addEventListener("input",renderCards);
-  document.getElementById("onlyPlayed").addEventListener("change",renderCards);
+  const pf=document.getElementById("playedFilter"); pf.querySelectorAll(".segb").forEach(b=>b.addEventListener("click",()=>{playedF=b.dataset.pf; pf.querySelectorAll(".segb").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false")); renderCards();}));
 }
 function renderCards(){
   const q=fold(document.getElementById("msearch").value.trim());
   const hl=document.getElementById("hlPlayer").value;
-  const onlyPlayed=document.getElementById("onlyPlayed").checked;
   const list=DB.matches.filter(m=>{
     if(grpFilter!=="*"&&m.grp!==grpFilter)return false;
-    if(onlyPlayed&&!scoreOf(m))return false;
+    if(playedF==="played"&&!scoreOf(m))return false; if(playedF==="unplayed"&&scoreOf(m))return false;
     if(q&&!(fold(m.t1).includes(q)||fold(m.t2).includes(q)))return false; return true;});
   const el=document.getElementById("cards");
   if(!list.length){el.innerHTML=`<div class="empty">Nema mečeva za izabrane filtere.</div>`;return;}
@@ -388,13 +443,74 @@ function renderCards(){
       <div class="picks">${chips}</div></div>`;}).join("");
 }
 
+/* ----- detalji igrača ----- */
+function openPlayer(nick){
+  const p=DB.players.find(x=>x.nick===nick); if(!p) return;
+  const ms=DB.matches.slice().sort((a,b)=>a.n-b.n);
+  let hits=0,tips=0,pts=0;
+  const rows=ms.map(m=>{
+    const pk=m.picks[nick], s=scoreOf(m), cls=TCLASS[pk]||"";
+    let res="",state="";
+    if(s){const ok=isHit(pk,s); state=ok?"hit":"miss"; res=`<span class="pm-res">${s[0]}:${s[1]}</span>`; tips++; if(ok){hits++;pts+=(m.odds[pk]||0);}}
+    return `<div class="pm-row ${state}"><span class="pm-n">#${m.n}</span><span class="pm-teams">${flag(m.t1)} ${m.t1} <i>\u2013</i> ${m.t2} ${flag(m.t2)}</span>${res}<span class="pchip ${cls}"><s>${pk||"\u2013"}</s><span class="od">(${pk?m.odds[pk]:"\u2013"})</span></span></div>`;
+  }).join("");
+  document.getElementById("pmodal-body").innerHTML=`<div class="pm-head">${flag2(p.champ)}<div><b>${p.name}</b><div class="pm-sub">Pogodaka: ${hits}/${tips} \u00b7 Bodova: ${fmt(r1(pts))}</div></div></div><div class="pm-list">${rows}</div>`;
+  const mo=document.getElementById("pmodal"); mo.hidden=false; document.body.style.overflow="hidden";
+}
+function closePlayer(){ document.getElementById("pmodal").hidden=true; document.body.style.overflow=""; }
+document.getElementById("pmodal").addEventListener("click",e=>{ if(e.target.hasAttribute("data-close")) closePlayer(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closePlayer(); });
+
+/* ----- kretanje (race) ----- */
+let raceFrames=[], raceI=0, raceTimer=null, raceBuilt=false;
+const avatarColor=i=>`hsl(${(i*53)%360} 70% 62%)`;
+const initials=n=>n.split(" ").map(w=>w[0]).slice(0,2).join("");
+function buildRace(){
+  const played=DB.matches.filter(m=>scoreOf(m)).sort((a,b)=>a.n-b.n);
+  const race=document.getElementById("race"), slider=document.getElementById("raceSlider");
+  if(!played.length){ race.innerHTML='<div class="empty">Grafikon će se pojaviti kad počnu rezultati.</div>'; race.style.height="auto"; document.getElementById("raceLabel").textContent="\u2014"; slider.max=1; return; }
+  const cum={}; DB.players.forEach(p=>cum[p.nick]=0); raceFrames=[];
+  played.forEach(m=>{
+    DB.players.forEach(p=>{const pk=m.picks[p.nick]; if(pk&&isHit(pk,scoreOf(m))) cum[p.nick]+=(m.odds[pk]||0);});
+    raceFrames.push({label:`Posle #${m.n}: ${m.t1}\u2013${m.t2}`, pts:DB.players.map((p,i)=>({i,nick:p.nick,name:p.name,v:r1(cum[p.nick])}))});
+  });
+  race.style.height=(DB.players.length*30)+"px";
+  race.innerHTML=DB.players.map((p,i)=>`<div class="race-row" data-nick="${p.nick}"><div class="race-av" style="background:${avatarColor(i)}">${initials(p.name)}</div><div class="race-name">${p.nick}</div><div class="race-track"><div class="race-fill" style="background:${avatarColor(i)}"></div></div><div class="race-pts">0</div></div>`).join("");
+  slider.max=raceFrames.length; raceBuilt=true; showFrame(raceFrames.length-1);
+}
+function showFrame(idx){
+  if(!raceFrames.length) return;
+  idx=Math.max(0,Math.min(idx,raceFrames.length-1)); raceI=idx;
+  const fr=raceFrames[idx], ranked=fr.pts.slice().sort((a,b)=>b.v-a.v||a.i-b.i), maxv=Math.max(...fr.pts.map(x=>x.v),1);
+  const rows=[...document.getElementById("race").children];
+  ranked.forEach((d,rank)=>{
+    const row=rows.find(r=>r.dataset.nick===d.nick); if(!row) return;
+    row.style.transform=`translateY(${rank*30}px)`;
+    row.querySelector(".race-fill").style.width=Math.max(2,(d.v/maxv)*100)+"%";
+    row.querySelector(".race-pts").textContent=fmt(d.v);
+  });
+  document.getElementById("raceLabel").textContent=fr.label;
+  document.getElementById("raceSlider").value=idx+1;
+}
+function racePlay(){
+  if(!raceFrames.length) return;
+  const btn=document.getElementById("racePlay");
+  if(raceTimer){clearInterval(raceTimer);raceTimer=null;btn.textContent="\u25B6 Pusti";return;}
+  if(raceI>=raceFrames.length-1) showFrame(0);
+  btn.textContent="\u23F8 Pauza";
+  raceTimer=setInterval(()=>{ if(raceI>=raceFrames.length-1){clearInterval(raceTimer);raceTimer=null;btn.textContent="\u25B6 Pusti";return;} showFrame(raceI+1); },900);
+}
+document.getElementById("racePlay").addEventListener("click",racePlay);
+document.getElementById("raceSlider").addEventListener("input",e=>{ if(raceTimer){clearInterval(raceTimer);raceTimer=null;document.getElementById("racePlay").textContent="\u25B6 Pusti";} showFrame(+e.target.value-1); });
+
 /* ----- tabovi ----- */
-const tabs=[["tab-plasman","view-plasman"],["tab-prognoze","view-prognoze"],["tab-statistika","view-statistika"]];
+const tabs=[["tab-plasman","view-plasman"],["tab-prognoze","view-prognoze"],["tab-statistika","view-statistika"],["tab-kretanje","view-kretanje"]];
 function selectTab(id){
   tabs.forEach(([t,v])=>{const on=t===id;document.getElementById(t).setAttribute("aria-selected",on?"true":"false");document.getElementById(v).classList.toggle("active",on);});
   if(id==="tab-prognoze"&&!prognozeReady){initPrognoze();renderCards();prognozeReady=true;}
   if(id==="tab-statistika") renderStats();
-  history.replaceState(null,"",{"tab-plasman":"#plasman","tab-prognoze":"#prognoze","tab-statistika":"#statistika"}[id]);
+  if(id==="tab-kretanje") buildRace();
+  history.replaceState(null,"",{"tab-plasman":"#plasman","tab-prognoze":"#prognoze","tab-statistika":"#statistika","tab-kretanje":"#kretanje"}[id]);
 }
 tabs.forEach(([t])=>document.getElementById(t).addEventListener("click",()=>selectTab(t)));
 
@@ -404,7 +520,7 @@ fetch("./scores.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{
 }).catch(()=>{});
 
 renderPlasman();
-if(location.hash==="#prognoze") selectTab("tab-prognoze"); else if(location.hash==="#statistika") selectTab("tab-statistika");
+if(location.hash==="#prognoze") selectTab("tab-prognoze"); else if(location.hash==="#statistika") selectTab("tab-statistika"); else if(location.hash==="#kretanje") selectTab("tab-kretanje");
 </script>
 </body>
 </html>
