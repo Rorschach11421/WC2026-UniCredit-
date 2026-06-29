@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniCredit Takmičenje · SP 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pitch-900:#07241c;--pitch-850:#0a2c22;--pitch-800:#0d3a2c;--pitch-700:#14513c;
+    --line:rgba(255,255,255,.09);--line-strong:rgba(255,255,255,.16);
+    --gold:#f5c84b;--gold-deep:#caa036;--silver:#cdd6da;--bronze:#cd8c54;
+    --mint:#3ee0a6;--ink:#f2f7f3;--muted:#86a597;--muted-2:#5f7e72;
+    --shadow:0 18px 50px -22px rgba(0,0,0,.75);--r:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);
+    background:radial-gradient(1200px 600px at 80% -10%, rgba(245,200,75,.10), transparent 60%),
+      radial-gradient(900px 500px at -5% 10%, rgba(62,224,166,.07), transparent 55%),
+      linear-gradient(180deg,#06201a 0%, var(--pitch-900) 30%, #061d17 100%);
+    min-height:100vh;line-height:1.5;padding:clamp(16px,4vw,40px)}
+  .wrap{max-width:880px;margin:0 auto}
+  .head{position:relative;margin-bottom:18px}
+  .eyebrow{font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:.28em;text-transform:uppercase;
+    font-size:12px;color:var(--gold);display:flex;align-items:center;gap:10px}
+  .eyebrow::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--gold-deep),transparent)}
+  h1{font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(30px,7vw,52px);line-height:1.02;margin:8px 0 4px}
+  h1 .tro{filter:drop-shadow(0 4px 10px rgba(245,200,75,.35))}
+  .sub{color:var(--muted);font-size:15px;max-width:48ch}
+  .status{display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:rgba(62,224,166,.08);
+    border:1px solid rgba(62,224,166,.22);color:#bdf3df;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:500}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--mint);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(62,224,166,.5)}70%{box-shadow:0 0 0 8px rgba(62,224,166,0)}100%{box-shadow:0 0 0 0 rgba(62,224,166,0)}}
+
+  .tabs{display:flex;gap:6px;margin:22px 0 24px;border-bottom:1px solid var(--line)}
+  .tab{font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:14px;
+    background:none;border:none;color:var(--muted);padding:12px 16px;cursor:pointer;position:relative;transition:color .15s}
+  .tab:hover{color:var(--ink)}
+  .tab[aria-selected="true"]{color:var(--gold)}
+  .tab[aria-selected="true"]::after{content:"";position:absolute;left:12px;right:12px;bottom:-1px;height:2px;background:var(--gold);border-radius:2px}
+  .tab:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+  .view{display:none}.view.active{display:block}
+
+  .podium{display:grid;grid-template-columns:1fr 1.18fr 1fr;gap:12px;align-items:end;margin:6px 0 26px}
+  .pod{background:linear-gradient(180deg,var(--pitch-800),var(--pitch-850));border:1px solid var(--line);
+    border-radius:var(--r);padding:18px 14px 16px;text-align:center;position:relative;box-shadow:var(--shadow);overflow:hidden}
+  .pod::before{content:"";position:absolute;inset:0 0 auto 0;height:4px}
+  .pod.g1::before{background:linear-gradient(90deg,var(--gold-deep),var(--gold),var(--gold-deep))}
+  .pod.g2::before{background:linear-gradient(90deg,#9aa6ab,var(--silver),#9aa6ab)}
+  .pod.g3::before{background:linear-gradient(90deg,#a06a3c,var(--bronze),#a06a3c)}
+  .pod.g1{padding-top:26px;padding-bottom:24px}
+  .medal{font-family:'Oswald',sans-serif;font-weight:700;font-size:13px;letter-spacing:.1em}
+  .pod.g1 .medal{color:var(--gold)}.pod.g2 .medal{color:var(--silver)}.pod.g3 .medal{color:var(--bronze)}
+  .pod .flag{line-height:0;margin:10px 0 6px;display:block}
+  .pod .flag .flagi{width:42px;height:31px;border-radius:5px}
+  .pod .nm{font-weight:600;font-size:15px;line-height:1.25;min-height:2.5em;display:flex;align-items:center;justify-content:center}
+  .pod .pts{font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(26px,6vw,38px);margin-top:8px;color:#fff}
+  .pod .pts small{font-size:13px;color:var(--muted);font-weight:500;margin-left:4px}
+
+  .table{background:var(--pitch-850);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+  .thead,.row{display:grid;grid-template-columns:46px 1fr 92px 64px;align-items:center;gap:8px}
+  .thead{padding:13px 18px;border-bottom:1px solid var(--line);font-family:'Oswald',sans-serif;font-weight:600;
+    letter-spacing:.12em;text-transform:uppercase;font-size:11px;color:var(--muted)}
+  .thead .r-pts,.thead .r-pick{text-align:center}
+  .row{padding:12px 18px;border-bottom:1px solid var(--line);position:relative;transition:background .14s;
+    opacity:0;transform:translateY(6px);animation:in .4s forwards}
+  @keyframes in{to{opacity:1;transform:none}}
+  .row:last-child{border-bottom:none}
+  .row:hover{background:rgba(255,255,255,.03)}
+  .row.top .r-rank{color:var(--gold)}
+  .r-rank{font-family:'Oswald',sans-serif;font-weight:600;font-size:19px;color:var(--muted);text-align:center}
+  .r-name{display:flex;flex-direction:column;min-width:0}
+  .r-name b{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .r-bar{height:4px;background:rgba(255,255,255,.07);border-radius:3px;margin-top:6px;overflow:hidden;max-width:220px}
+  .r-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold));border-radius:3px;width:0;transition:width .7s cubic-bezier(.2,.7,.2,1)}
+  .row .r-pts{font-family:'Oswald',sans-serif;font-weight:700;font-size:20px;text-align:center;color:#fff}
+  .row .r-pick{text-align:center;line-height:0}
+  .flagi{display:inline-block;width:24px;height:18px;border-radius:3px;object-fit:cover;overflow:hidden;vertical-align:middle;box-shadow:0 0 0 1px rgba(255,255,255,.16);background:rgba(255,255,255,.05)}
+  .row .r-pick .flagi{width:28px;height:21px}
+  .tm .flagi{width:28px;height:21px}
+  /* divider after 8th place */
+  .split{display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 18px;background:rgba(226,0,26,.07);border-top:4px solid #e2001a}
+  .split span{font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:12px;color:#ff7a7a;white-space:nowrap;text-align:center}
+
+  details.upd{margin-top:22px;background:var(--pitch-850);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  details.upd summary{list-style:none;cursor:pointer;padding:15px 18px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;color:var(--ink);user-select:none}
+  details.upd summary::-webkit-details-marker{display:none}
+  summary .chev{margin-left:auto;transition:transform .2s;color:var(--muted)}
+  details[open] summary .chev{transform:rotate(180deg)}
+  .upd-body{padding:0 18px 18px;border-top:1px solid var(--line)}
+  .upd-body p{color:var(--muted);font-size:13px;margin:14px 0}
+  .upd-body code{background:var(--pitch-800);padding:2px 6px;border-radius:5px;font-size:12px;color:#e7d9a8}
+  textarea{width:100%;min-height:110px;background:var(--pitch-900);border:1px solid var(--line);color:var(--ink);
+    border-radius:10px;padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;resize:vertical;line-height:1.55}
+  textarea:focus{outline:none;border-color:var(--gold-deep)}
+  .upd-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .btn{background:var(--pitch-800);border:1px solid var(--line-strong);color:var(--ink);border-radius:11px;
+    padding:11px 18px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s}
+  .btn:hover{background:var(--pitch-700)}
+  .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .btn.primary{background:var(--gold);color:#21180a;border-color:transparent}
+  .btn.primary:hover{background:#ffd564}
+  .note{font-size:12px;color:var(--muted-2);margin-top:10px;line-height:1.6}
+
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 22px}
+  .search{position:relative;flex:1;min-width:200px}
+  .search input{width:100%;background:var(--pitch-850);border:1px solid var(--line);color:var(--ink);
+    border-radius:11px;padding:12px 14px 12px 42px;font-size:15px;font-family:inherit;transition:border-color .15s,background .15s}
+  .search input::placeholder{color:var(--muted-2)}
+  .search input:focus{outline:none;border-color:var(--gold-deep);background:var(--pitch-800)}
+  .search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:17px;height:17px;stroke:var(--muted);fill:none}
+  select.hl{background:var(--pitch-850);border:1px solid var(--line);color:var(--ink);border-radius:11px;padding:12px 14px;font-size:14px;font-family:inherit;cursor:pointer}
+  select.hl:focus{outline:none;border-color:var(--gold-deep)}
+  .toggle{display:inline-flex;align-items:center;gap:9px;font-size:14px;color:var(--muted);cursor:pointer;user-select:none;padding:11px 4px}
+  .toggle input{appearance:none;width:38px;height:22px;background:var(--pitch-700);border-radius:999px;position:relative;cursor:pointer;transition:background .18s;flex:none}
+  .toggle input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;background:#cfe3da;border-radius:50%;transition:transform .18s}
+  .toggle input:checked{background:var(--gold)}
+  .toggle input:checked::after{transform:translateX(16px);background:#21180a}
+  .toggle input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+  .grpbar{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 18px}
+  .gchip{font-family:'Oswald',sans-serif;font-weight:600;font-size:13px;letter-spacing:.05em;
+    background:var(--pitch-850);border:1px solid var(--line);color:var(--muted);border-radius:9px;padding:7px 13px;cursor:pointer;transition:all .14s}
+  .gchip:hover{color:var(--ink);border-color:var(--line-strong)}
+  .gchip[aria-pressed="true"]{background:var(--gold);color:#21180a;border-color:transparent}
+  .gchip:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 14px;background:var(--pitch-850);border:1px solid var(--line);
+    border-radius:11px;padding:12px 16px;margin-bottom:18px;font-size:12.5px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:22px;height:18px;border-radius:5px;display:inline-block}
+  .mcard{background:var(--pitch-850);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px 13px;margin-bottom:13px;
+    box-shadow:var(--shadow);opacity:0;transform:translateY(6px);animation:in .35s forwards}
+  .mcard.done{border-color:rgba(62,224,166,.25)}
+  .mtop{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);margin-bottom:12px;flex-wrap:wrap}
+  .mnum{font-family:'Oswald',sans-serif;font-weight:700;color:var(--gold);font-size:13px}
+  .mgrp{background:var(--pitch-800);border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-weight:600;letter-spacing:.04em}
+  .mdate{margin-left:auto}
+  .mteams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-bottom:14px}
+  .tm{display:flex;align-items:center;gap:9px;font-weight:600;font-size:15.5px;min-width:0}
+  .tm .fl{font-size:24px;flex:none}
+  .tm.home{justify-content:flex-end;text-align:right}
+  .tm .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .vs{font-family:'Oswald',sans-serif;font-weight:600;color:var(--muted-2);font-size:13px;letter-spacing:.05em}
+  .vs.scr{color:#fff;font-size:22px;background:var(--pitch-900);border:1px solid var(--line-strong);border-radius:9px;padding:3px 12px;white-space:nowrap}
+  .picks{display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--line);padding-top:13px}
+  .pchip{display:inline-flex;align-items:baseline;gap:6px;border-radius:8px;padding:5px 9px;font-size:12.5px;border:1px solid transparent;transition:transform .12s}
+  .pchip b{font-weight:600;color:var(--ink);font-size:12.5px}
+  .pchip s{font-family:'Oswald',sans-serif;font-weight:600;text-decoration:none;font-size:13px}
+  .pchip .od{color:var(--muted-2);font-size:11px;font-style:normal}
+  .pchip.hl{outline:2px solid var(--gold);outline-offset:1px;transform:translateY(-1px)}
+  .pchip.hit{box-shadow:0 0 0 1.5px var(--mint) inset}
+  .pchip.miss{opacity:.42}
+  .t1{background:rgba(62,224,166,.14)}.t1 s{color:#7fe7c0}
+  .tX{background:rgba(245,200,75,.16)}.tX s{color:#f3d27a}
+  .t2{background:rgba(248,113,113,.15)}.t2 s{color:#f3a3a3}
+  .t01{background:rgba(125,211,252,.14)}.t01 s{color:#bfe6ff}
+  .t02{background:rgba(167,139,250,.16)}.t02 s{color:#cbbdf7}
+  .t3{background:rgba(251,146,60,.16)}.t3 s{color:#fcc08a}
+  .t4{background:rgba(244,114,182,.16)}.t4 s{color:#f6b6da}
+  .empty{padding:30px 18px;text-align:center;color:var(--muted)}
+  .stats-title{font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:.12em;text-transform:uppercase;font-size:12px;color:var(--gold);margin:26px 0 12px}
+  .stats-intro{color:var(--muted);font-size:14px;margin:0 0 18px}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:start}
+  .stat{background:var(--pitch-850);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+  .stat-h{font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .stat-v{font-family:'Oswald',sans-serif;font-weight:700;font-size:23px;color:#fff;margin:7px 0 3px;display:flex;align-items:center;gap:8px;min-height:30px}
+  .stat-s{font-size:12.5px;color:var(--muted)}
+  .row{cursor:pointer}
+  .pmodal[hidden]{display:none}
+  .pmodal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px}
+  .pmodal-bg{position:absolute;inset:0;background:rgba(3,12,9,.72)}
+  .pmodal-card{position:relative;background:var(--pitch-850);border:1px solid var(--line-strong);border-radius:16px;max-width:560px;width:100%;max-height:85vh;overflow:auto;box-shadow:var(--shadow);padding:18px}
+  .pmodal-x{position:absolute;top:8px;right:12px;background:none;border:none;color:var(--muted);font-size:26px;line-height:1;cursor:pointer}
+  .pmodal-x:hover{color:var(--ink)}
+  .pm-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-right:28px}
+  .pm-head b{font-size:18px;font-weight:600}
+  .pm-sub{color:var(--muted);font-size:13px;margin-top:2px}
+  .pm-list{display:flex;flex-direction:column;gap:6px}
+  .pm-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 10px;border:1px solid var(--line);border-radius:9px;font-size:13px}
+  .pm-row.hit{border-color:rgba(62,224,166,.3);background:rgba(62,224,166,.05)}
+  .pm-row.miss{opacity:.6}
+  .pm-n{font-family:'Oswald',sans-serif;color:var(--gold);font-weight:600;font-size:12px;min-width:24px}
+  .pm-teams{flex:1;min-width:150px;display:flex;align-items:center;gap:6px}
+  .pm-teams i{color:var(--muted-2);font-style:normal}
+  .pm-res{font-family:'Oswald',sans-serif;color:#fff;background:var(--pitch-900);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-size:12px}
+  .pm-row .pchip{margin-left:auto}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--pitch-850)}
+  .segb{background:none;border:none;border-right:1px solid var(--line);color:var(--muted);font-family:inherit;font-size:13.5px;font-weight:600;padding:11px 14px;cursor:pointer}
+  .segb:last-child{border-right:none}
+  .segb:hover{color:var(--ink)}
+  .segb[aria-pressed="true"]{background:var(--gold);color:#21180a}
+  .segb:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  .race-ctrl{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .race-ctrl input[type=range]{flex:1;min-width:140px;accent-color:var(--gold)}
+  .race-label{font-family:'Oswald',sans-serif;font-weight:600;font-size:13px;color:var(--muted);white-space:nowrap}
+  .race{position:relative}
+  .race-row{position:absolute;left:0;right:0;height:30px;display:flex;align-items:center;gap:8px;transition:transform .6s cubic-bezier(.22,.7,.2,1)}
+  .race-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-weight:700;font-size:10px;color:#0b1f17;flex:none}
+  .race-name{font-size:12.5px;width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:none}
+  .race-track{flex:1;height:15px;background:rgba(255,255,255,.05);border-radius:8px;overflow:hidden}
+  .race-fill{height:100%;border-radius:8px;width:0;transition:width .6s cubic-bezier(.22,.7,.2,1)}
+  .race-pts{font-family:'Oswald',sans-serif;font-weight:700;font-size:13px;color:#fff;width:34px;text-align:right;flex:none}
+  @media (max-width:560px){.race-name{width:74px}.pm-teams{min-width:120px}}
+  footer{text-align:center;color:var(--muted-2);font-size:12.5px;margin-top:26px;line-height:1.7}
+  footer b{color:var(--muted)}
+
+  @media (max-width:560px){
+    .podium{grid-template-columns:1fr;gap:10px}
+    .pod{display:flex;align-items:center;gap:14px;text-align:left;padding:14px 16px!important}
+    .pod::before{inset:0 auto 0 0;width:4px;height:auto}
+    .pod .flag{margin:0}.pod .flag .flagi{width:34px;height:25px}.pod .nm{min-height:0;justify-content:flex-start;flex:1}.pod .pts{margin:0}
+    .thead,.row{grid-template-columns:36px 1fr 64px 44px}
+    .tm{font-size:14px}.tm .fl{font-size:21px}
+    .mdate{flex-basis:100%;margin-left:0;margin-top:2px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.row,.mcard{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="head">
+    <div class="eyebrow">Svetsko prvenstvo 2026 · Prognoza</div>
+    <h1><span class="tro">🏆</span> UniCredit Takmičenje</h1>
+    <p class="sub" id="leadLine">Plasman se računa sam iz rezultata mečeva.</p>
+    <span class="status"><span class="dot"></span><span id="statusTxt">—</span></span>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-plasman" aria-selected="true" aria-controls="view-plasman">Plasman</button>
+    <button class="tab" role="tab" id="tab-prognoze" aria-selected="false" aria-controls="view-prognoze">Prognoze</button>
+    <button class="tab" role="tab" id="tab-statistika" aria-selected="false" aria-controls="view-statistika">Statistika</button>
+    <button class="tab" role="tab" id="tab-kretanje" aria-selected="false" aria-controls="view-kretanje">Trka za Vrh</button>
+  </nav>
+
+  <!-- PLASMAN -->
+  <section class="view active" id="view-plasman" role="tabpanel" aria-labelledby="tab-plasman">
+    <div class="table" role="table" aria-label="Plasman">
+      <div class="thead" role="row">
+        <div role="columnheader">#</div><div role="columnheader">Takmičar</div>
+        <div class="r-pts" role="columnheader">Bodovi</div><div class="r-pick" role="columnheader">Osvajač</div>
+      </div>
+      <div id="rows"></div>
+    </div>
+      </section>
+
+  <!-- PROGNOZE -->
+  <section class="view" id="view-prognoze" role="tabpanel" aria-labelledby="tab-prognoze">
+    <div class="controls">
+      <label class="search">
+        <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="msearch" type="search" placeholder="Pretraži reprezentaciju…" autocomplete="off" aria-label="Pretraga timova">
+      </label>
+      <select class="hl" id="hlPlayer" aria-label="Istakni takmičara"><option value="">Istakni takmičara…</option></select>
+      <div class="seg" id="playedFilter" role="group" aria-label="Filter odigranih"><button class="segb" data-pf="all" aria-pressed="true">Sve</button><button class="segb" data-pf="played" aria-pressed="false">Odigrani</button><button class="segb" data-pf="unplayed" aria-pressed="false">Neodigrani</button></div>
+      <div class="seg" id="phaseFilter" role="group" aria-label="Faza"><button class="segb" data-ph="all" aria-pressed="true">Sve faze</button><button class="segb" data-ph="G" aria-pressed="false">Grupna</button><button class="segb" data-ph="E" aria-pressed="false">Eliminaciona</button></div>
+    </div>
+    <div class="grpbar" id="grpbar"></div>
+    <div class="legend">
+      <span><i class="t1"></i>1 — domaćin</span><span><i class="tX"></i>X — nerešeno</span>
+      <span><i class="t2"></i>2 — gost</span><span><i class="t01"></i>0–1 gol</span>
+      <span><i class="t02"></i>0–2 gola</span><span><i class="t3"></i>3+ gola</span><span><i class="t4"></i>4+ gola</span>
+    </div>
+    <div id="cards"></div>
+  </section>
+
+  <section class="view" id="view-statistika" role="tabpanel" aria-labelledby="tab-statistika">
+    <p class="stats-intro">Sve se računa iz prognoza, rezultata i kvota — i osvežava kako stižu rezultati.</p>
+    <div class="stats" id="stats"></div>
+  </section>
+  <section class="view" id="view-kretanje" role="tabpanel" aria-labelledby="tab-kretanje">
+    <p class="stats-intro">Kako se plasman menjao meč po meč. Pusti animaciju ili prevuci klizač.</p>
+    <div class="race-ctrl">
+      <button class="btn" id="racePlay">▶ Pusti</button>
+      <input type="range" id="raceSlider" min="1" max="1" value="1" step="1" aria-label="Meč">
+      <span class="race-label" id="raceLabel">—</span>
+    </div>
+    <div class="race" id="race"></div>
+  </section>
+
+  <div class="pmodal" id="pmodal" hidden>
+    <div class="pmodal-bg" data-close></div>
+    <div class="pmodal-card">
+      <button class="pmodal-x" data-close aria-label="Zatvori">×</button>
+      <div id="pmodal-body"></div>
+    </div>
+  </div>
+
+  <footer>
+    <b>UniCredit Takmičenje</b> · Svetsko prvenstvo 2026<br>
+    Bodovi se računaju iz rezultata × koeficijent pogođenog tipa · 72 meča grupne faze.
+  </footer>
+</div>
+
+<script>
+const DB = {"players": [{"nick": "Laza", "name": "Dragan Lazarević", "champ": "BRA"}, {"nick": "Miha", "name": "Siniša Miholjčić", "champ": "SPA"}, {"nick": "Dejo", "name": "Dejan Kokanović", "champ": "POR"}, {"nick": "Aco", "name": "Aleksandar Mojićević", "champ": "SPA"}, {"nick": "Dača", "name": "Dalibor Lapčić", "champ": "ENG"}, {"nick": "Bota", "name": "Nikola Bota", "champ": "NED"}, {"nick": "Steva", "name": "Stevan Carić", "champ": "SPA"}, {"nick": "DekiI", "name": "Dejan Ivanović", "champ": "FRA"}, {"nick": "Neša", "name": "Nenad Mijuca", "champ": "POR"}, {"nick": "DekiJ", "name": "Dejan Jovičić", "champ": "GER"}, {"nick": "Stef", "name": "Stefan Arsić", "champ": "SPA"}, {"nick": "Srki", "name": "Srđan Bošnjak", "champ": "SPA"}, {"nick": "Anđa", "name": "Anđela Milošević", "champ": "BRA"}, {"nick": "Srele", "name": "Srećko Stepanović", "champ": "ENG"}, {"nick": "Jeca", "name": "Jelena Brkljač", "champ": "BRA"}, {"nick": "Rale", "name": "Rastko Spasojević", "champ": "FRA"}], "matches": [{"n": 1, "grp": "A", "date": "čet 11.06.", "time": "21:00", "t1": "Mexico", "t2": "South Africa", "picks": {"Laza": "1", "Miha": "X", "Dejo": "3+", "Aco": "0-2", "Dača": "1", "Bota": "3+", "Steva": "1", "DekiI": "3+", "Neša": "0-2", "DekiJ": "X", "Stef": "1", "Srki": "1", "Anđa": "1", "Srele": "3+", "Jeca": "1", "Rale": "1"}, "odds": {"1": 1.5, "X": 4.3, "2": 7, "0-1": 3.3, "0-2": 1.8, "3+": 2.1, "4+": 3.6}, "phase": "G"}, {"n": 2, "grp": "A", "date": "pet 12.06.", "time": "04:00", "t1": "South Korea", "t2": "Czech Republic", "picks": {"Laza": "0-2", "Miha": "X", "Dejo": "X", "Aco": "1", "Dača": "0-2", "Bota": "1", "Steva": "X", "DekiI": "2", "Neša": "0-2", "DekiJ": "X", "Stef": "1", "Srki": "0-2", "Anđa": "X", "Srele": "3+", "Jeca": "1", "Rale": "X"}, "odds": {"1": 2.7, "X": 3.2, "2": 2.8, "0-1": 3, "0-2": 1.7, "3+": 2.2, "4+": 4}, "phase": "G"}, {"n": 3, "grp": "B", "date": "pet 12.06.", "time": "21:00", "t1": "Canada", "t2": "Bosnia & Herzegovina", "picks": {"Laza": "0-2", "Miha": "2", "Dejo": "3+", "Aco": "0-1", "Dača": "2", "Bota": "0-2", "Steva": "X", "DekiI": "X", "Neša": "1", "DekiJ": "0-2", "Stef": "0-1", "Srki": "1", "Anđa": "3+", "Srele": "1", "Jeca": "3+", "Rale": "0-2"}, "odds": {"1": 1.9, "X": 3.6, "2": 4.3, "0-1": 3, "0-2": 1.7, "3+": 2.2, "4+": 4}, "phase": "G"}, {"n": 4, "grp": "D", "date": "sub 13.06.", "time": "03:00", "t1": "USA", "t2": "Paraguay", "picks": {"Laza": "0-2", "Miha": "4+", "Dejo": "1", "Aco": "X", "Dača": "1", "Bota": "1", "Steva": "3+", "DekiI": "3+", "Neša": "0-2", "DekiJ": "X", "Stef": "X", "Srki": "0-2", "Anđa": "0-1", "Srele": "0-1", "Jeca": "1", "Rale": "1"}, "odds": {"1": 2.1, "X": 3.4, "2": 3.7, "0-1": 3, "0-2": 1.7, "3+": 2.2, "4+": 4}, "phase": "G"}, {"n": 5, "grp": "B", "date": "sub 13.06.", "time": "21:00", "t1": "Qatar", "t2": "Switzerland", "picks": {"Laza": "2", "Miha": "1", "Dejo": "4+", "Aco": "0-2", "Dača": "3+", "Bota": "3+", "Steva": "2", "DekiI": "4+", "Neša": "3+", "DekiJ": "2", "Stef": "2", "Srki": "2", "Anđa": "2", "Srele": "0-2", "Jeca": "2", "Rale": "2"}, "odds": {"1": 10.1, "X": 5.5, "2": 1.3, "0-1": 4.5, "0-2": 2.2, "3+": 1.7, "4+": 2.6}, "phase": "G"}, {"n": 6, "grp": "C", "date": "ned 14.06.", "time": "00:00", "t1": "Brazil", "t2": "Morocco", "picks": {"Laza": "1", "Miha": "3+", "Dejo": "0-1", "Aco": "0-2", "Dača": "3+", "Bota": "1", "Steva": "3+", "DekiI": "X", "Neša": "0-2", "DekiJ": "1", "Stef": "X", "Srki": "1", "Anđa": "3+", "Srele": "X", "Jeca": "1", "Rale": "3+"}, "odds": {"1": 1.6, "X": 4.1, "2": 5.8, "0-1": 3.5, "0-2": 1.9, "3+": 1.9, "4+": 3.3}, "phase": "G"}, {"n": 7, "grp": "C", "date": "ned 14.06.", "time": "03:00", "t1": "Haiti", "t2": "Scotland", "picks": {"Laza": "3+", "Miha": "2", "Dejo": "1", "Aco": "0-1", "Dača": "2", "Bota": "0-1", "Steva": "2", "DekiI": "2", "Neša": "0-2", "DekiJ": "X", "Stef": "2", "Srki": "2", "Anđa": "2", "Srele": "0-2", "Jeca": "2", "Rale": "2"}, "odds": {"1": 7, "X": 4.3, "2": 1.5, "0-1": 3.5, "0-2": 1.9, "3+": 1.9, "4+": 3.3}, "phase": "G"}, {"n": 8, "grp": "D", "date": "ned 14.06.", "time": "06:00", "t1": "Australia", "t2": "Turkey", "picks": {"Laza": "2", "Miha": "X", "Dejo": "2", "Aco": "X", "Dača": "2", "Bota": "3+", "Steva": "2", "DekiI": "2", "Neša": "2", "DekiJ": "X", "Stef": "3+", "Srki": "2", "Anđa": "2", "Srele": "2", "Jeca": "3+", "Rale": "2"}, "odds": {"1": 4.6, "X": 3.7, "2": 1.8, "0-1": 3.3, "0-2": 1.8, "3+": 2.1, "4+": 3.6}, "phase": "G"}, {"n": 9, "grp": "E", "date": "ned 14.06.", "time": "19:00", "t1": "Germany", "t2": "Curacao", "picks": {"Laza": "3+", "Miha": "2", "Dejo": "2", "Aco": "0-2", "Dača": "1", "Bota": "4+", "Steva": "4+", "DekiI": "4+", "Neša": "4+", "DekiJ": "4+", "Stef": "1", "Srki": "1", "Anđa": "0-2", "Srele": "4+", "Jeca": "1", "Rale": "1"}, "odds": {"1": 1, "X": 15.9, "2": 60, "0-1": 12.7, "0-2": 4.8, "3+": 1.2, "4+": 1.5}, "phase": "G"}, {"n": 10, "grp": "F", "date": "ned 14.06.", "time": "22:00", "t1": "Netherlands", "t2": "Japan", "picks": {"Laza": "0-2", "Miha": "X", "Dejo": "X", "Aco": "1", "Dača": "1", "Bota": "1", "Steva": "2", "DekiI": "0-2", "Neša": "3+", "DekiJ": "1", "Stef": "3+", "Srki": "3+", "Anđa": "1", "Srele": "X", "Jeca": "1", "Rale": "3+"}, "odds": {"1": 2, "X": 3.5, "2": 3.8, "0-1": 3.8, "0-2": 2.1, "3+": 1.8, "4+": 3}, "phase": "G"}, {"n": 11, "grp": "E", "date": "pon 15.06.", "time": "01:00", "t1": "Ivory Coast", "t2": "Ecuador", "picks": {"Laza": "0-2", "Miha": "4+", "Dejo": "1", "Aco": "1", "Dača": "X", "Bota": "0-2", "Steva": "X", "DekiI": "3+", "Neša": "0-2", "DekiJ": "0-2", "Stef": "4+", "Srki": "0-2", "Anđa": "2", "Srele": "3+", "Jeca": "3+", "Rale": "X"}, "odds": {"1": 3.4, "X": 3, "2": 2.4, "0-1": 2.5, "0-2": 1.5, "3+": 2.6, "4+": 5.3}, "phase": "G"}, {"n": 12, "grp": "F", "date": "pon 15.06.", "time": "04:00", "t1": "Sweden", "t2": "Tunisia", "picks": {"Laza": "2", "Miha": "X", "Dejo": "X", "Aco": "X", "Dača": "0-1", "Bota": "1", "Steva": "X", "DekiI": "0-2", "Neša": "0-2", "DekiJ": "1", "Stef": "1", "Srki": "0-2", "Anđa": "0-2", "Srele": "1", "Jeca": "1", "Rale": "1"}, "odds": {"1": 2, "X": 3.5, "2": 3.8, "0-1": 2.9, "0-2": 1.6, "3+": 2.4, "4+": 4.3}, "phase": "G"}, {"n": 13, "grp": "H", "date": "pon 15.06.", "time": "18:00", "t1": "Spain", "t2": "Cape Verde", "picks": {"Laza": "3+", "Miha": "1", "Dejo": "X", "Aco": "4+", "Dača": "3+", "Bota": "4+", "Steva": "3+", "DekiI": "4+", "Neša": "4+", "DekiJ": "4+", "Stef": "1", "Srki": "1", "Anđa": "0-2", "Srele": "4+", "Jeca": "1", "Rale": "3+"}, "odds": {"1": 1.1, "X": 9.5, "2": 28, "0-1": 7.2, "0-2": 3.2, "3+": 1.4, "4+": 1.9}, "phase": "G"}, {"n": 14, "grp": "G", "date": "pon 15.06.", "time": "21:00", "t1": "Belgium", "t2": "Egypt", "picks": {"Laza": "0-2", "Miha": "1", "Dejo": "X", "Aco": "1", "Dača": "1", "Bota": "3+", "Steva": "1", "DekiI": "1", "Neša": "3+", "DekiJ": "1", "Stef": "4+", "Srki": "1", "Anđa": "1", "Srele": "3+", "Jeca": "1", "Rale": "3+"}, "odds": {"1": 1.7, "X": 3.8, "2": 5.2, "0-1": 3.8, "0-2": 2.1, "3+": 1.8, "4+": 3}, "phase": "G"}, {"n": 15, "grp": "H", "date": "uto 16.06.", "time": "00:00", "t1": "Saudi Arabia", "t2": "Uruguay", "picks": {"Laza": "0-2", "Miha": "2", "Dejo": "2", "Aco": "1", "Dača": "2", "Bota": "X", "Steva": "2", "DekiI": "3+", "Neša": "0-2", "DekiJ": "2", "Stef": "2", "Srki": "2", "Anđa": "2", "Srele": "3+", "Jeca": "2", "Rale": "2"}, "odds": {"1": 7, "X": 4.3, "2": 1.5, "0-1": 3.5, "0-2": 1.9, "3+": 1.9, "4+": 3.3}, "phase": "G"}, {"n": 16, "grp": "G", "date": "uto 16.06.", "time": "03:00", "t1": "Iran", "t2": "New Zealand", "picks": {"Laza": "0-2", "Miha": "1", "Dejo": "1", "Aco": "1", "Dača": "X", "Bota": "X", "Steva": "1", "DekiI": "1", "Neša": "1", "DekiJ": "1", "Stef": "X", "Srki": "0-2", "Anđa": "0-1", "Srele": "X", "Jeca": "0-2", "Rale": "0-2"}, "odds": {"1": 1.9, "X": 3.6, "2": 4.3, "0-1": 3.3, "0-2": 1.8, "3+": 2.1, "4+": 3.6}, "phase": "G"}, {"n": 17, "grp": "I", "date": "uto 16.06.", "time": "21:00", "t1": "France", "t2": "Senegal", "picks": {"Laza": "3+", "Miha": "4+", "Dejo": "2", "Aco": "0-2", "Dača": "1", "Bota": "4+", "Steva": "1", "DekiI": "0-2", "Neša": "0-2", "DekiJ": "1", "Stef": "3+", "Srki": "1", "Anđa": "3+", "Srele": "X", "Jeca": "1", "Rale": "3+"}, "odds": {"1": 1.5, "X": 4.3, "2": 7, "0-1": 3.5, "0-2": 1.9, "3+": 1.9, "4+": 3.3}, "phase": "G"}, {"n": 18, "grp": "I", "date": "sre 17.06.", "time": "00:00", "t1": "Iraq", "t2": "Norway", "picks": {"Laza": "2", "Miha": "0-2", "Dejo": "2", "Aco": "0-2", "Dača": "0-2", "Bota": "3+", "Steva": "2", "DekiI": "0-2", "Neša": "3+", "DekiJ": "2", "Stef": "2", "Srki": "2", "Anđa": "2", "Srele": "4+", "Jeca": "0-2", "Rale": "2"}, "odds": {"1": 10.1, "X": 5.5, "2": 1.3, "0-1": 5, "0-2": 2.4, "3+": 1.6, "4+": 2.5}, "phase": "G"}, {"n": 19, "grp": "J", "date": "sre 17.06.", "time": "03:00", "t1": "Argentina", "t2": "Algeria", "picks": {"Laza": "1", "Miha": "1", "Dejo": "1", "Aco": "0-2", "Dača": "1", "Bota": "3+", "Steva": "1", "DekiI": "1", "Neša": "0-2", "DekiJ": "1", "Stef": "3+", "Srki": "1", "Anđa": "1", "Srele": "0-2", "Jeca": "1", "Rale": "1"}, "odds": {"1": 1.5, "X": 4.3, "2": 7, "0-1": 3.5, "0-2": 1.9, "3+": 1.9, "4+": 3.3}, "phase": "G"}, {"n": 20, "grp": "J", "date": "sre 17.06.", "time": "06:00", "t1": "Austria", "t2": "Jordan", "picks": {"Laza": "1", "Miha": "0-1", "Dejo": "4+", "Aco": "0-2", "Dača": "1", "Bota": "1", "Steva": "1", "DekiI": "1", "Neša": "3+", "DekiJ": "1", "Stef": "0-2", "Srki": "1", "Anđa": "1", "Srele": "0-2", "Jeca": "1", "Rale": "1"}, "odds": {"1": 1.4, "X": 5, "2": 8.3, "0-1": 5, "0-2": 2.4, "3+": 1.6, "4+": 2.5}, "phase": "G"}, {"n": 21, "grp": "K", "date": "sre 17.06.", "time": "19:00", "t1": "Portugal", "t2": "DR Congo", "picks": {"Laza": "0-2", "Miha": "1", "Dejo": "1", "Aco": "0-2", "Dača": "3+", "Bota": "4+", "Steva": "3+", "DekiI": "1", "Neša": "3+", "DekiJ": "1", "Stef": "1", "Srki": "1", "Anđa": "0-2", "Srele": "4+", "Jeca": "1", "Rale": "1"}, "odds": {"1": 1.3, "X": 5.5, "2": 10.1, "0-1": 5, "0-2": 2.4, "3+": 1.6, "4+": 2.5}, "phase": "G"}, {"n": 22, "grp": "L", "date": "sre 17.06.", "time": "22:00", "t1": "England", "t2": "Croatia", "picks": {"Laza": "0-2", "Miha": "X", "Dejo": "X", "Aco": "1", "Dača": "0-2", "Bota": "0-2", "Steva": "0-1", "DekiI": "X", "Neša": "1", "DekiJ": "X", "Stef": "3+", "Srki": "0-2", "Anđa": "X", "Srele": "0-1", "Jeca": "0-2", "Rale": "3+"}, "odds": {"1": 1.8, "X": 3.7, "2": 4.6, "0-1": 3, "0-2": 1.7, "3+": 2.2, "4+": 4}, "phase": "G"}, {"n": 23, "grp": "L", "date": "čet 18.06.", "time": "01:00", "t1": "Ghana", "t2": "Panama", "picks": {"Laza": "1", "Miha": "0-1", "Dejo": "1", "Aco": "1", "Dača": "X", "Bota": "1", "Steva": "X", "DekiI": "X", "Neša": "0-2", "DekiJ": "1", "Stef": "1", "Srki": "0-2", "Anđa": "1", "Srele": "1", "Jeca": "3+", "Rale": "1"}, "odds": {"1": 2, "X": 3.5, "2": 3.8, "0-1": 3, "0-2": 1.7, "3+": 2.2, "4+": 4}, "phase": "G"}, {"n": 24, "grp": "K", "date": "čet 18.06.", "time": "04:00", "t1": "Uzbekistan", "t2": "Colombia", "picks": {"Laza": "0-2", "Miha": "4+", "Dejo": "1", "Aco": "X", "Dača": "2", "Bota": "2", "Steva": "2", "DekiI": "3+", "Neša": "0-2", "DekiJ": "2", "Stef": "X", "Srki": "2", "Anđa": "2", "Srele": "3+", "Jeca": "4+", "Rale": "2"}, "odds": {"1": 7, "X": 4.3, "2": 1.5, "0-1": 3.5, "0-2": 1.9, "3+": 1.9, "4+": 3.3}, "phase": "G"}, {"n": 25, "grp": "A", "date": "čet 18.06.", "time": "18:00", "t1": "Czech Republic", "t2": "South Africa", "picks": {"Laza": "0-2", "Miha": "1", "Dejo": "X", "Aco": "X", "Dača": "1", "Bota": "X", "Steva": "1", "DekiI": "2", "Neša": "0-2", "DekiJ": "X", "Stef": "1", "Srki": "1", "Anđa": "1", "Srele": "X", "Jeca": "1", "Rale": "1"}, "odds": {"1": 2, "X": 3.5, "2": 3.8, "0-1": 2.9, "0-2": 1.6, "3+": 2.4, "4+": 4.3}, "phase": "G"}, {"n": 26, "grp": "B", "date": "čet 18.06.", "time": "21:00", "t1": "Switzerland", "t2": "Bosnia & Herzegovina", "picks": {"Laza": "3+", "Miha": "2", "Dejo": "X", "Aco": "X", "Dača": "1", "Bota": "1", "Steva": "1", "DekiI": "X", "Neša": "0-2", "DekiJ": "1", "Stef": "3+", "Srki": "1", "Anđa": "1", "Srele": "3+", "Jeca": "3+", "Rale": "1"}, "odds": {"1": 1.6, "X": 4.1, "2": 5.8, "0-1": 3.3, "0-2": 1.8, "3+": 2.1, "4+": 3.6}, "phase": "G"}, {"n": 27, "grp": "B", "date": "pet 19.06.", "time": "00:00", "t1": "Canada", "t2": "Qatar", "picks": {"Laza": "1", "Miha": "3+", "Dejo": "1", "Aco": "0-2", "Dača": "0-2", "Bota": "1", "Steva": "1", "DekiI": "1", "Neša": "0-2", "DekiJ": "1", "Stef": "1", "Srki": "1", "Anđa": "1", "Srele": "3+", "Jeca": "1", "Rale": "1"}, "odds": {"1": 1.5, "X": 4.3, "2": 7, "0-1": 3.3, "0-2": 1.8, "3+": 2.1, "4+": 3.6}, "phase": "G"}, {"n": 28, "grp": "A", "date": "pet 19.06.", "time": "03:00", "t1": "Mexico", "t2": "South Korea", "picks": {"Laza": "1", "Miha": "3+", "Dejo": "X", "Aco": "0-2", "Dača": "1", "Bota": "0-2", "Steva": "X", "DekiI": "2", "Neša": "1", "DekiJ": "X", "Stef": "X", "Srki": "1", "Anđa": "1", "Srele": "X", "Jeca": "X", "Rale": "X"}, "odds": {"1": 1.8, "X": 3.7, "2": 4.6, "0-1": 3, "0-2": 1.7, "3+": 2.2, "4+": 4}, "phase": "G"}, {"n": 29, "grp": "D", "date": "pet 19.06.", "time": "21:00", "t1": "USA", "t2": "Australia", "picks": {"Laza": "0-2", "Miha": "X", "Dejo": "1", "Aco": "3+", "Dača": "1", "Bota": "0-2", "Steva": "3+", "DekiI": "0-2", "Neša": "1", "DekiJ": "1", "Stef": "3+", "Srki": "1", "Anđa": "1", "Srele": "X", "Jeca": "X", "Rale": "1"}, "odds": {"1": 1.8, "X": 3.7, "2": 4.6, "0-1": 3.3, "0-2": 1.8, "3+": 2.1, "4+": 3.6}, "phase": "G"}, {"n": 30, "grp": "C", "date": "sub 20.06.", "time": "00:00", "t1": "Scotland", "t2": "Morocco", "picks": {"Laza": "0-2", "Miha": "X", "Dejo": "2", "Aco": "X", "Dača": "2", "Bota": "2", "Steva": "2", "DekiI": "X", "Neša": "0-2", "DekiJ": "2", "Stef": "2", "Srki": "0-2", "Anđa": "2", "Srele": "2", "Jeca": "X", "Rale": "0-2"}, "odds": {"1": 3.7, "X": 3.4, "2": 2.1, "0-1": 2.9, "0-2": 1.6, "3+": 2.4, "4+": 4.3}, "phase": "G"}, {"n": 31, "grp": "C", "date": "sub 20.06.", "time": "03:00", "t1": "Brazil", "t2": "Haiti", "picks": {"Laza": "3+", "Miha": "1", "Dejo": "3+", "Aco": "4+", "Dača": "4+", "Bota": "4+", "Steva": "4+", "DekiI": "4+", "Neša": "4+", "DekiJ": "4+", "Stef": "1", "Srki": "1", "Anđa": "0-2", "Srele": "4+", "Jeca": "3+", "Rale": "1"}, "odds": {"1": 1.1, "X": 9.5, "2": 28, "0-1": 9.8, "0-2": 4, "3+": 1.3, "4+": 1.7}, "phase": "G"}, {"n": 32, "grp": "D", "date": "sub 20.06.", "time": "05:00", "t1": "Turkey", "t2": "Paraguay", "picks": {"Laza": "3+", "Miha": "1", "Dejo": "X", "Aco": "1", "Dača": "X", "Bota": "1", "Steva": "X", "DekiI": "1", "Neša": "0-2", "DekiJ": "1", "Stef": "3+", "Srki": "0-2", "Anđa": "1", "Srele": "3+", "Jeca": "3+", "Rale": "X"}, "odds": {"1": 2.3, "X": 3.1, "2": 3.6, "0-1": 2.9, "0-2": 1.6, "3+": 2.4, "4+": 4.3}, "phase": "G"}, {"n": 33, "grp": "F", "date": "sub 20.06.", "time": "19:00", "t1": "Netherlands", "t2": "Sweden", "picks": {"Laza": "1", "Miha": "0-1", "Dejo": "X", "Aco": "0-2", "Dača": "1", "Bota": "3+", "Steva": "1", "DekiI": "0-2", "Neša": "0-2", "DekiJ": "1", "Stef": "1", "Srki": "1", "Anđa": "1", "Srele": "1", "Jeca": "0-2", "Rale": "3+"}, "odds": {"1": 1.7, "X": 3.8, "2": 5.2, "0-1": 3.5, "0-2": 1.9, "3+": 1.9, "4+": 3.3}, "phase": "G"}, {"n": 34, "grp": "E", "date": "sub 20.06.", "time": "22:00", "t1": "Germany", "t2": "Ivory Coast", "picks": {"Laza": "2", "Miha": "4+", "Dejo": "X", "Aco": "X", "Dača": "1", "Bota": "4+", "Steva": "1", "DekiI": "4+", "Neša": "3+", "DekiJ": "1", "Stef": "3+", "Srki": "1", "Anđa": "X", "Srele": "X", "Jeca": "1", "Rale": "0-2"}, "odds": {"1": 1.6, "X": 4.1, "2": 5.8, "0-1": 3.8, "0-2": 2.1, "3+": 1.8, "4+": 3}, "phase": "G"}, {"n": 35, "grp": "E", "date": "ned 21.06.", "time": "02:00", "t1": "Ecuador", "t2": "Curacao", "picks": {"Laza": "1", "Miha": "4+", "Dejo": "1", "Aco": "4+", "Dača": "1", "Bota": "2", "Steva": "1", "DekiI": "3+", "Neša": "3+", "DekiJ": "0-2", "Stef": "1", "Srki": "1", "Anđa": "1", "Srele": "0-2", "Jeca": "1", "Rale": "1"}, "odds": {"1": 1.3, "X": 5.5, "2": 10.1, "0-1": 3.8, "0-2": 2.1, "3+": 1.8, "4+": 3}, "phase": "G"}, {"n": 36, "grp": "F", "date": "ned 21.06.", "time": "06:00", "t1": "Tunisia", "t2": "Japan", "picks": {"Laza": "0-2", "Miha": "X", "Dejo": "2", "Aco": "0-2", "Dača": "X", "Bota": "0-2", "Steva": "2", "DekiI": "2", "Neša": "2", "DekiJ": "2", "Stef": "2", "Srki": "0-2", "Anđa": "2", "Srele": "2", "Jeca": "2", "Rale": "2"}, "odds": {"1": 4.3, "X": 3.6, "2": 1.9, "0-1": 3, "0-2": 1.7, "3+": 2.2, "4+": 4}, "phase": "G"}, {"n": 37, "grp": "H", "date": "ned 21.06.", "time": "18:00", "t1": "Spain", "t2": "Saudi Arabia", "picks": {"Laza": "3+", "Miha": "1", "Dejo": "4+", "Aco": "0-2", "Dača": "3+", "Bota": "4+", "Steva": "3+", "DekiI": "4+", "Neša": "3+", "DekiJ": "3+", "Stef": "1", "Srki": "1", "Anđa": "3+", "Srele": "4+", "Jeca": "1", "Rale": "3+"}, "odds": {"1": 1.1, "X": 9.5, "2": 28, "0-1": 5.4, "0-2": 2.6, "3+": 1.5, "4+": 2.3}, "phase": "G"}, {"n": 38, "grp": "G", "date": "ned 21.06.", "time": "21:00", "t1": "Belgium", "t2": "Iran", "picks": {"Laza": "3+", "Miha": "X", "Dejo": "X", "Aco": "3+", "Dača": "1", "Bota": "2", "Steva": "1", "DekiI": "1", "Neša": "3+", "DekiJ": "0-2", "Stef": "3+", "Srki": "1", "Anđa": "1", "Srele": "3+", "Jeca": "1", "Rale": "1"}, "odds": {"1": 1.5, "X": 4.3, "2": 7, "0-1": 3.8, "0-2": 2.1, "3+": 1.8, "4+": 3}, "phase": "G"}, {"n": 39, "grp": "H", "date": "pon 22.06.", "time": "00:00", "t1": "Uruguay", "t2": "Cape Verde", "picks": {"Laza": "1", "Miha": "4+", "Dejo": "0-2", "Aco": "0-2", "Dača": "1", "Bota": "1", "Steva": "1", "DekiI": "1", "Neša": "0-2", "DekiJ": "1", "Stef": "1", "Srki": "1", "Anđa": "1", "Srele": "1", "Jeca": "1", "Rale": "1"}, "odds": {"1": 1.5, "X": 4.3, "2": 7, "0-1": 3.5, "0-2": 1.9, "3+": 1.9, "4+": 3.3}, "phase": "G"}, {"n": 40, "grp": "G", "date": "pon 22.06.", "time": "03:00", "t1": "New Zealand", "t2": "Egypt", "picks": {"Laza": "0-1", "Miha": "0-1", "Dejo": "2", "Aco": "X", "Dača": "2", "Bota": "X", "Steva": "2", "DekiI": "0-2", "Neša": "2", "DekiJ": "2", "Stef": "0-1", "Srki": "0-2", "Anđa": "2", "Srele": "2", "Jeca": "X", "Rale": "2"}, "odds": {"1": 4.6, "X": 3.7, "2": 1.8, "0-1": 3, "0-2": 1.7, "3+": 2.2, "4+": 4}, "phase": "G"}, {"n": 41, "grp": "J", "date": "pon 22.06.", "time": "19:00", "t1": "Argentina", "t2": "Austria", "picks": {"Laza": "X", "Miha": "1", "Dejo": "0-1", "Aco": "1", "Dača": "1", "Bota": "1", "Steva": "1", "DekiI": "X", "Neša": "0-2", "DekiJ": "1", "Stef": "1", "Srki": "1", "Anđa": "3+", "Srele": "3+", "Jeca": "1", "Rale": "3+"}, "odds": {"1": 1.7, "X": 3.8, "2": 5.2, "0-1": 3.3, "0-2": 1.8, "3+": 2.1, "4+": 3.6}, "phase": "G"}, {"n": 42, "grp": "I", "date": "pon 22.06.", "time": "23:00", "t1": "France", "t2": "Iraq", "picks": {"Laza": "3+", "Miha": "0-1", "Dejo": "1", "Aco": "0-2", "Dača": "3+", "Bota": "4+", "Steva": "3+", "DekiI": "4+", "Neša": "3+", "DekiJ": "4+", "Stef": "1", "Srki": "1", "Anđa": "4+", "Srele": "3+", "Jeca": "3+", "Rale": "3+"}, "odds": {"1": 1.1, "X": 9.5, "2": 28, "0-1": 5.4, "0-2": 2.6, "3+": 1.5, "4+": 2.3}, "phase": "G"}, {"n": 43, "grp": "I", "date": "uto 23.06.", "time": "02:00", "t1": "Norway", "t2": "Senegal", "picks": {"Laza": "3+", "Miha": "0-2", "Dejo": "X", "Aco": "X", "Dača": "X", "Bota": "0-1", "Steva": "X", "DekiI": "0-2", "Neša": "0-2", "DekiJ": "X", "Stef": "1", "Srki": "3+", "Anđa": "1", "Srele": "X", "Jeca": "0-2", "Rale": "0-2"}, "odds": {"1": 2.1, "X": 3.4, "2": 3.7, "0-1": 3.5, "0-2": 1.9, "3+": 1.9, "4+": 3.3}, "phase": "G"}, {"n": 44, "grp": "J", "date": "uto 23.06.", "time": "05:00", "t1": "Jordan", "t2": "Algeria", "picks": {"Laza": "2", "Miha": "0-2", "Dejo": "2", "Aco": "3+", "Dača": "0-2", "Bota": "2", "Steva": "2", "DekiI": "2", "Neša": "0-2", "DekiJ": "2", "Stef": "X", "Srki": "2", "Anđa": "3+", "Srele": "2", "Jeca": "0-2", "Rale": "2"}, "odds": {"1": 5.2, "X": 3.8, "2": 1.7, "0-1": 3.3, "0-2": 1.8, "3+": 2.1, "4+": 3.6}, "phase": "G"}, {"n": 45, "grp": "K", "date": "uto 23.06.", "time": "19:00", "t1": "Portugal", "t2": "Uzbekistan", "picks": {"Laza": "1", "Miha": "1", "Dejo": "X", "Aco": "0-2", "Dača": "3+", "Bota": "4+", "Steva": "0-2", "DekiI": "4+", "Neša": "3+", "DekiJ": "3+", "Stef": "X", "Srki": "1", "Anđa": "3+", "Srele": "4+", "Jeca": "3+", "Rale": "1"}, "odds": {"1": 1.2, "X": 6.4, "2": 13.3, "0-1": 5, "0-2": 2.4, "3+": 1.6, "4+": 2.5}, "phase": "G"}, {"n": 46, "grp": "L", "date": "uto 23.06.", "time": "22:00", "t1": "England", "t2": "Ghana", "picks": {"Laza": "0-2", "Miha": "X", "Dejo": "X", "Aco": "0-2", "Dača": "0-2", "Bota": "4+", "Steva": "1", "DekiI": "X", "Neša": "3+", "DekiJ": "1", "Stef": "1", "Srki": "1", "Anđa": "1", "Srele": "1", "Jeca": "3+", "Rale": "3+"}, "odds": {"1": 1.3, "X": 5.5, "2": 10.1, "0-1": 4.5, "0-2": 2.2, "3+": 1.7, "4+": 2.6}, "phase": "G"}, {"n": 47, "grp": "L", "date": "sre 24.06.", "time": "01:00", "t1": "Panama", "t2": "Croatia", "picks": {"Laza": "2", "Miha": "3+", "Dejo": "3+", "Aco": "0-1", "Dača": "2", "Bota": "0-2", "Steva": "3+", "DekiI": "2", "Neša": "0-2", "DekiJ": "2", "Stef": "2", "Srki": "2", "Anđa": "2", "Srele": "3+", "Jeca": "0-2", "Rale": "2"}, "odds": {"1": 5.8, "X": 4.1, "2": 1.6, "0-1": 3.3, "0-2": 1.8, "3+": 2.1, "4+": 3.6}, "phase": "G"}, {"n": 48, "grp": "K", "date": "sre 24.06.", "time": "04:00", "t1": "Colombia", "t2": "DR Congo", "picks": {"Laza": "1", "Miha": "4+", "Dejo": "2", "Aco": "0-2", "Dača": "1", "Bota": "1", "Steva": "1", "DekiI": "1", "Neša": "0-2", "DekiJ": "1", "Stef": "1", "Srki": "1", "Anđa": "1", "Srele": "1", "Jeca": "3+", "Rale": "1"}, "odds": {"1": 1.5, "X": 4.3, "2": 7, "0-1": 3, "0-2": 1.7, "3+": 2.2, "4+": 4}, "phase": "G"}, {"n": 49, "grp": "B", "date": "sre 24.06.", "time": "21:00", "t1": "Switzerland", "t2": "Canada", "picks": {"Laza": "3+", "Miha": "X", "Dejo": "X", "Aco": "0-1", "Dača": "1", "Bota": "3+", "Steva": "1", "DekiI": "X", "Neša": "0-2", "DekiJ": "1", "Stef": "0-1", "Srki": "0-2", "Anđa": "1", "Srele": "1", "Jeca": "0-2", "Rale": "X"}, "odds": {"1": 2.2, "X": 3.3, "2": 3.5, "0-1": 3, "0-2": 1.7, "3+": 2.2, "4+": 4}, "phase": "G"}, {"n": 50, "grp": "B", "date": "sre 24.06.", "time": "21:00", "t1": "Bosnia & Herzegovina", "t2": "Qatar", "picks": {"Laza": "1", "Miha": "X", "Dejo": "1", "Aco": "0-1", "Dača": "1", "Bota": "0-1", "Steva": "1", "DekiI": "X", "Neša": "0-2", "DekiJ": "1", "Stef": "1", "Srki": "1", "Anđa": "1", "Srele": "X", "Jeca": "1", "Rale": "1"}, "odds": {"1": 1.7, "X": 3.8, "2": 5.2, "0-1": 3.3, "0-2": 1.8, "3+": 2.1, "4+": 3.6}, "phase": "G"}, {"n": 51, "grp": "C", "date": "čet 25.06.", "time": "00:00", "t1": "Morocco", "t2": "Haiti", "picks": {"Laza": "1", "Miha": "0-2", "Dejo": "0-2", "Aco": "4+", "Dača": "1", "Bota": "1", "Steva": "1", "DekiI": "0-2", "Neša": "3+", "DekiJ": "1", "Stef": "1", "Srki": "1", "Anđa": "1", "Srele": "3+", "Jeca": "1", "Rale": "1"}, "odds": {"1": 1.4, "X": 5, "2": 8.3, "0-1": 3.8, "0-2": 2.1, "3+": 1.8, "4+": 3}, "phase": "G"}, {"n": 52, "grp": "C", "date": "čet 25.06.", "time": "00:00", "t1": "Scotland", "t2": "Brazil", "picks": {"Laza": "0-2", "Miha": "X", "Dejo": "0-2", "Aco": "0-2", "Dača": "X", "Bota": "3+", "Steva": "0-2", "DekiI": "2", "Neša": "3+", "DekiJ": "2", "Stef": "2", "Srki": "2", "Anđa": "2", "Srele": "3+", "Jeca": "3+", "Rale": "2"}, "odds": {"1": 8.3, "X": 5, "2": 1.4, "0-1": 3.8, "0-2": 2.1, "3+": 1.8, "4+": 3}, "phase": "G"}, {"n": 53, "grp": "A", "date": "čet 25.06.", "time": "03:00", "t1": "South Africa", "t2": "South Korea", "picks": {"Laza": "X", "Miha": "X", "Dejo": "2", "Aco": "2", "Dača": "2", "Bota": "0-2", "Steva": "2", "DekiI": "2", "Neša": "0-2", "DekiJ": "2", "Stef": "2", "Srki": "2", "Anđa": "X", "Srele": "0-2", "Jeca": "2", "Rale": "2"}, "odds": {"1": 3.5, "X": 3.3, "2": 2.2, "0-1": 3, "0-2": 1.7, "3+": 2.2, "4+": 4}, "phase": "G"}, {"n": 54, "grp": "A", "date": "čet 25.06.", "time": "03:00", "t1": "Czech Republic", "t2": "Mexico", "picks": {"Laza": "2", "Miha": "X", "Dejo": "2", "Aco": "0-1", "Dača": "X", "Bota": "0-2", "Steva": "X", "DekiI": "X", "Neša": "0-2", "DekiJ": "2", "Stef": "3+", "Srki": "2", "Anđa": "2", "Srele": "2", "Jeca": "2", "Rale": "X"}, "odds": {"1": 3.8, "X": 3.5, "2": 2, "0-1": 3, "0-2": 1.7, "3+": 2.2, "4+": 4}, "phase": "G"}, {"n": 55, "grp": "E", "date": "čet 25.06.", "time": "22:00", "t1": "Curacao", "t2": "Ivory Coast", "picks": {"Laza": "2", "Miha": "1", "Dejo": "2", "Aco": "3+", "Dača": "X", "Bota": "X", "Steva": "2", "DekiI": "2", "Neša": "3+", "DekiJ": "2", "Stef": "4+", "Srki": "2", "Anđa": "3+", "Srele": "3+", "Jeca": "0-2", "Rale": "2"}, "odds": {"1": 8.3, "X": 5, "2": 1.4, "0-1": 3.8, "0-2": 2.1, "3+": 1.8, "4+": 3}, "phase": "G"}, {"n": 56, "grp": "E", "date": "čet 25.06.", "time": "22:00", "t1": "Ecuador", "t2": "Germany", "picks": {"Laza": "0-2", "Miha": "4+", "Dejo": "X", "Aco": "3+", "Dača": "2", "Bota": "3+", "Steva": "X", "DekiI": "4+", "Neša": "3+", "DekiJ": "2", "Stef": "4+", "Srki": "2", "Anđa": "3+", "Srele": "2", "Jeca": "2", "Rale": "0-2"}, "odds": {"1": 5.2, "X": 3.8, "2": 1.7, "0-1": 3.8, "0-2": 2.1, "3+": 1.8, "4+": 3}, "phase": "G"}, {"n": 57, "grp": "F", "date": "pet 26.06.", "time": "01:00", "t1": "Tunisia", "t2": "Netherlands", "picks": {"Laza": "2", "Miha": "X", "Dejo": "2", "Aco": "0-2", "Dača": "2", "Bota": "2", "Steva": "2", "DekiI": "2", "Neša": "0-2", "DekiJ": "2", "Stef": "2", "Srki": "2", "Anđa": "2", "Srele": "3+", "Jeca": "2", "Rale": "2"}, "odds": {"1": 5.8, "X": 4.1, "2": 1.6, "0-1": 3.5, "0-2": 1.9, "3+": 1.9, "4+": 3.3}, "phase": "G"}, {"n": 58, "grp": "F", "date": "pet 26.06.", "time": "01:00", "t1": "Japan", "t2": "Sweden", "picks": {"Laza": "1", "Miha": "X", "Dejo": "1", "Aco": "1", "Dača": "1", "Bota": "2", "Steva": "X", "DekiI": "X", "Neša": "0-2", "DekiJ": "1", "Stef": "0-2", "Srki": "1", "Anđa": "3+", "Srele": "3+", "Jeca": "X", "Rale": "X"}, "odds": {"1": 2.1, "X": 3.4, "2": 3.7, "0-1": 3.3, "0-2": 1.8, "3+": 2.1, "4+": 3.6}, "phase": "G"}, {"n": 59, "grp": "D", "date": "pet 26.06.", "time": "04:00", "t1": "Turkey", "t2": "USA", "picks": {"Laza": "1", "Miha": "2", "Dejo": "X", "Aco": "X", "Dača": "X", "Bota": "1", "Steva": "3+", "DekiI": "X", "Neša": "0-2", "DekiJ": "X", "Stef": "3+", "Srki": "0-2", "Anđa": "1", "Srele": "X", "Jeca": "X", "Rale": "0-2"}, "odds": {"1": 2.9, "X": 3.3, "2": 2.6, "0-1": 3.3, "0-2": 1.8, "3+": 2.1, "4+": 3.6}, "phase": "G"}, {"n": 60, "grp": "D", "date": "pet 26.06.", "time": "04:00", "t1": "Paraguay", "t2": "Australia", "picks": {"Laza": "0-2", "Miha": "1", "Dejo": "1", "Aco": "X", "Dača": "1", "Bota": "1", "Steva": "1", "DekiI": "X", "Neša": "0-2", "DekiJ": "1", "Stef": "1", "Srki": "0-2", "Anđa": "1", "Srele": "X", "Jeca": "2", "Rale": "0-2"}, "odds": {"1": 2.2, "X": 3.3, "2": 3.5, "0-1": 2.9, "0-2": 1.6, "3+": 2.4, "4+": 4.3}, "phase": "G"}, {"n": 61, "grp": "I", "date": "pet 26.06.", "time": "21:00", "t1": "Norway", "t2": "France", "picks": {"Laza": "0-2", "Miha": "3+", "Dejo": "1", "Aco": "0-1", "Dača": "2", "Bota": "2", "Steva": "X", "DekiI": "2", "Neša": "0-2", "DekiJ": "3+", "Stef": "3+", "Srki": "2", "Anđa": "3+", "Srele": "3+", "Jeca": "2", "Rale": "2"}, "odds": {"1": 5.2, "X": 3.8, "2": 1.7, "0-1": 3.5, "0-2": 1.9, "3+": 1.9, "4+": 3.3}, "phase": "G"}, {"n": 62, "grp": "I", "date": "pet 26.06.", "time": "21:00", "t1": "Senegal", "t2": "Iraq", "picks": {"Laza": "1", "Miha": "2", "Dejo": "1", "Aco": "0-1", "Dača": "0-2", "Bota": "1", "Steva": "1", "DekiI": "0-2", "Neša": "0-2", "DekiJ": "1", "Stef": "X", "Srki": "1", "Anđa": "1", "Srele": "1", "Jeca": "4+", "Rale": "1"}, "odds": {"1": 1.5, "X": 4.3, "2": 7, "0-1": 3.5, "0-2": 1.9, "3+": 1.9, "4+": 3.3}, "phase": "G"}, {"n": 63, "grp": "H", "date": "sub 27.06.", "time": "02:00", "t1": "Cape Verde", "t2": "Saudi Arabia", "picks": {"Laza": "0-2", "Miha": "0-2", "Dejo": "1", "Aco": "3+", "Dača": "2", "Bota": "X", "Steva": "1", "DekiI": "1", "Neša": "0-2", "DekiJ": "1", "Stef": "1", "Srki": "0-2", "Anđa": "0-1", "Srele": "1", "Jeca": "3+", "Rale": "3+"}, "odds": {"1": 2.9, "X": 3.3, "2": 2.6, "0-1": 2.9, "0-2": 1.6, "3+": 2.4, "4+": 4.3}, "phase": "G"}, {"n": 64, "grp": "H", "date": "sub 27.06.", "time": "02:00", "t1": "Uruguay", "t2": "Spain", "picks": {"Laza": "0-2", "Miha": "4+", "Dejo": "X", "Aco": "0-2", "Dača": "2", "Bota": "3+", "Steva": "X", "DekiI": "X", "Neša": "0-2", "DekiJ": "2", "Stef": "X", "Srki": "2", "Anđa": "2", "Srele": "X", "Jeca": "1", "Rale": "3+"}, "odds": {"1": 5.2, "X": 3.8, "2": 1.7, "0-1": 3.5, "0-2": 1.9, "3+": 1.9, "4+": 3.3}, "phase": "G"}, {"n": 65, "grp": "G", "date": "sub 27.06.", "time": "05:00", "t1": "New Zealand", "t2": "Belgium", "picks": {"Laza": "3+", "Miha": "1", "Dejo": "2", "Aco": "0-2", "Dača": "2", "Bota": "3+", "Steva": "3+", "DekiI": "4+", "Neša": "3+", "DekiJ": "2", "Stef": "2", "Srki": "2", "Anđa": "2", "Srele": "4+", "Jeca": "3+", "Rale": "2"}, "odds": {"1": 10.1, "X": 5.5, "2": 1.3, "0-1": 4.5, "0-2": 2.2, "3+": 1.7, "4+": 2.6}, "phase": "G"}, {"n": 66, "grp": "G", "date": "sub 27.06.", "time": "05:00", "t1": "Egypt", "t2": "Iran", "picks": {"Laza": "0-2", "Miha": "2", "Dejo": "X", "Aco": "0-1", "Dača": "X", "Bota": "0-2", "Steva": "X", "DekiI": "0-2", "Neša": "0-2", "DekiJ": "1", "Stef": "X", "Srki": "0-2", "Anđa": "1", "Srele": "3+", "Jeca": "0-2", "Rale": "1"}, "odds": {"1": 2.5, "X": 2.9, "2": 3.4, "0-1": 2.5, "0-2": 1.5, "3+": 2.6, "4+": 5.3}, "phase": "G"}, {"n": 67, "grp": "L", "date": "sub 27.06.", "time": "23:00", "t1": "Panama", "t2": "England", "picks": {"Laza": "0-2", "Miha": "3+", "Dejo": "4+", "Aco": "3+", "Dača": "2", "Bota": "3+", "Steva": "2", "DekiI": "3+", "Neša": "3+", "DekiJ": "2", "Stef": "2", "Srki": "2", "Anđa": "0-2", "Srele": "4+", "Jeca": "2", "Rale": "3+"}, "odds": {"1": 13.3, "X": 6.4, "2": 1.2, "0-1": 5, "0-2": 2.4, "3+": 1.6, "4+": 2.5}, "phase": "G"}, {"n": 68, "grp": "L", "date": "sub 27.06.", "time": "23:00", "t1": "Croatia", "t2": "Ghana", "picks": {"Laza": "1", "Miha": "2", "Dejo": "2", "Aco": "0-2", "Dača": "2", "Bota": "1", "Steva": "1", "DekiI": "X", "Neša": "0-2", "DekiJ": "1", "Stef": "3+", "Srki": "1", "Anđa": "1", "Srele": "3+", "Jeca": "3+", "Rale": "X"}, "odds": {"1": 1.7, "X": 3.8, "2": 5.2, "0-1": 3.3, "0-2": 1.8, "3+": 2.1, "4+": 3.6}, "phase": "G"}, {"n": 69, "grp": "K", "date": "ned 28.06.", "time": "01:30", "t1": "Colombia", "t2": "Portugal", "picks": {"Laza": "0-2", "Miha": "2", "Dejo": "2", "Aco": "0-1", "Dača": "2", "Bota": "2", "Steva": "X", "DekiI": "1", "Neša": "0-2", "DekiJ": "2", "Stef": "3+", "Srki": "2", "Anđa": "2", "Srele": "2", "Jeca": "3+", "Rale": "X"}, "odds": {"1": 3.5, "X": 3.3, "2": 2.2, "0-1": 3, "0-2": 1.7, "3+": 2.2, "4+": 4}, "phase": "G"}, {"n": 70, "grp": "K", "date": "ned 28.06.", "time": "01:30", "t1": "DR Congo", "t2": "Uzbekistan", "picks": {"Laza": "0-2", "Miha": "4+", "Dejo": "1", "Aco": "X", "Dača": "1", "Bota": "X", "Steva": "1", "DekiI": "0-2", "Neša": "0-2", "DekiJ": "1", "Stef": "2", "Srki": "0-2", "Anđa": "0-1", "Srele": "X", "Jeca": "1", "Rale": "1"}, "odds": {"1": 2.6, "X": 3.3, "2": 2.9, "0-1": 2.9, "0-2": 1.6, "3+": 2.4, "4+": 4.3}, "phase": "G"}, {"n": 71, "grp": "J", "date": "ned 28.06.", "time": "04:00", "t1": "Algeria", "t2": "Austria", "picks": {"Laza": "0-2", "Miha": "X", "Dejo": "X", "Aco": "X", "Dača": "2", "Bota": "2", "Steva": "0-2", "DekiI": "2", "Neša": "0-2", "DekiJ": "1", "Stef": "1", "Srki": "2", "Anđa": "2", "Srele": "X", "Jeca": "2", "Rale": "X"}, "odds": {"1": 3.5, "X": 3.3, "2": 2.2, "0-1": 3, "0-2": 1.7, "3+": 2.2, "4+": 4}, "phase": "G"}, {"n": 72, "grp": "J", "date": "ned 28.06.", "time": "04:00", "t1": "Jordan", "t2": "Argentina", "picks": {"Laza": "3+", "Miha": "0-2", "Dejo": "4+", "Aco": "0-2", "Dača": "3+", "Bota": "3+", "Steva": "2", "DekiI": "4+", "Neša": "3+", "DekiJ": "2", "Stef": "2", "Srki": "2", "Anđa": "3+", "Srele": "3+", "Jeca": "3+", "Rale": "3+"}, "odds": {"1": 13.3, "X": 6.4, "2": 1.2, "0-1": 5, "0-2": 2.4, "3+": 1.6, "4+": 2.5}, "phase": "G"}, {"n": 73, "grp": "1/16 finala", "date": "ned 28.06.", "time": "21:00", "t1": "South Africa", "t2": "Canada", "picks": {"Laza": "1", "Miha": "4+", "Dejo": "2", "Aco": "2", "Dača": "1", "Bota": "2", "Steva": "2", "DekiI": "X", "Neša": "4+", "DekiJ": "2", "Stef": "X", "Anđa": "0-2", "Srele": "X", "Jeca": "2", "Rale": "0-2"}, "odds": {"1": 5.8, "X": 3.7, "2": 1.73, "0-1": 3, "0-2": 1.77, "3+": 2.05, "4+": 3.6}, "phase": "E"}, {"n": 74, "grp": "1/16 finala", "date": "pon 29.06.", "time": "19:00", "t1": "Brazil", "t2": "Japan", "picks": {"Laza": "3+", "Miha": "X", "Dejo": "3+", "Aco": "1", "Dača": "X", "Bota": "0-1", "Steva": "X", "DekiI": "1", "Neša": "3+", "DekiJ": "1", "Stef": "1", "Anđa": "1", "Srele": "3+", "Jeca": "1", "Rale": "3+"}, "odds": {"1": 1.73, "X": 3.6, "2": 5.2, "0-1": 3.25, "0-2": 1.8, "3+": 1.9, "4+": 3.3}, "phase": "E"}, {"n": 75, "grp": "1/16 finala", "date": "pon 29.06.", "time": "22:30", "t1": "Germany", "t2": "Paraguay", "picks": {"Laza": "0-2", "Miha": "1", "Dejo": "0-2", "Aco": "3+", "Dača": "1", "Bota": "3+", "Steva": "1", "DekiI": "1", "Neša": "0-2", "DekiJ": "1", "Stef": "4+", "Anđa": "1", "Srele": "3+", "Jeca": "3+", "Rale": "1"}, "odds": {"1": 1.4, "X": 4.6, "2": 8, "0-1": 3.8, "0-2": 2.03, "3+": 1.7, "4+": 2.75}, "phase": "E"}, {"n": 76, "grp": "1/16 finala", "date": "uto 30.06.", "time": "03:00", "t1": "Netherlands", "t2": "Morocco", "picks": {"Laza": "3+", "Miha": "X", "Dejo": "2", "Aco": "0-1", "Dača": "2", "Bota": "1", "Steva": "X", "DekiI": "X", "Neša": "X", "DekiJ": "3+", "Stef": "X", "Anđa": "3+", "Srele": "X", "Jeca": "4+", "Rale": "3+"}, "odds": {"1": 2.2, "X": 3.15, "2": 3.75, "0-1": 2.7, "0-2": 1.6, "3+": 2.2, "4+": 4.2}, "phase": "E"}, {"n": 77, "grp": "1/16 finala", "date": "uto 30.06.", "time": "19:00", "t1": "Ivory Coast", "t2": "Norway", "picks": {"Laza": "3+", "Miha": "2", "Dejo": "X", "Aco": "0-2", "Dača": "2", "Bota": "1", "Steva": "3+", "DekiI": "X", "Neša": "2", "DekiJ": "2", "Stef": "2", "Anđa": "3+", "Srele": "2", "Jeca": "2", "Rale": "3+"}, "odds": {"1": 3.5, "X": 3.55, "2": 2.1, "0-1": 3.25, "0-2": 1.8, "3+": 1.9, "4+": 3.3}, "phase": "E"}, {"n": 78, "grp": "1/16 finala", "date": "uto 30.06.", "time": "23:00", "t1": "France", "t2": "Sweden", "picks": {"Laza": "3+", "Miha": "1", "Dejo": "0-2", "Aco": "0-2", "Dača": "1", "Bota": "0-2", "Steva": "1", "DekiI": "1", "Neša": "0-2", "DekiJ": "1", "Stef": "4+", "Anđa": "1", "Srele": "4+", "Jeca": "0-2", "Rale": "1"}, "odds": {"1": 1.3, "X": 5.8, "2": 9, "0-1": 4.4, "0-2": 2.41, "3+": 1.5, "4+": 2.2}, "phase": "E"}, {"n": 79, "grp": "1/16 finala", "date": "sre 01.07.", "time": "03:00", "t1": "Mexico", "t2": "Ecuador", "picks": {"Laza": "0-1", "Miha": "4+", "Dejo": "1", "Aco": "0-1", "Dača": "4+", "Bota": "X", "Steva": "X", "DekiI": "X", "Neša": "1", "DekiJ": "1", "Stef": "1", "Anđa": "X", "Srele": "X", "Jeca": "1", "Rale": "X"}, "odds": {"1": 2.25, "X": 2.95, "2": 3.85, "0-1": 2.19, "0-2": 1.41, "3+": 2.7, "4+": 5.4}, "phase": "E"}, {"n": 80, "grp": "1/16 finala", "date": "sre 01.07.", "time": "18:00", "t1": "England", "t2": "DR Congo", "picks": {"Laza": "0-2", "Miha": "2", "Dejo": "X", "Aco": "0-2", "Dača": "4+", "Bota": "3+", "Steva": "1", "DekiI": "1", "Neša": "4+", "DekiJ": "3+", "Stef": "4+", "Anđa": "1", "Srele": "1", "Jeca": "4+", "Rale": "1"}, "odds": {"1": 1.3, "X": 5.2, "2": 11, "0-1": 3.4, "0-2": 1.85, "3+": 1.85, "4+": 3.1}, "phase": "E"}, {"n": 81, "grp": "1/16 finala", "date": "sre 01.07.", "time": "22:00", "t1": "Belgium", "t2": "Senegal", "picks": {"Laza": "2", "Miha": "2", "Dejo": "2", "Aco": "1", "Dača": "X", "Bota": "X", "Steva": "1", "DekiI": "X", "Neša": "X", "DekiJ": "X", "Stef": "X", "Anđa": "3+", "Srele": "X", "Jeca": "3+", "Rale": "X"}, "odds": {"1": 2.15, "X": 3.25, "2": 3.75, "0-1": 2.55, "0-2": 1.55, "3+": 2.3, "4+": 4.4}, "phase": "E"}, {"n": 82, "grp": "1/16 finala", "date": "čet 02.07.", "time": "02:00", "t1": "USA", "t2": "Bosnia & Herzegovina", "picks": {"Laza": "1", "Miha": "X", "Dejo": "1", "Aco": "0-2", "Dača": "4+", "Bota": "0-1", "Steva": "X", "DekiI": "X", "Neša": "X", "DekiJ": "3+", "Stef": "X", "Anđa": "1", "Srele": "3+", "Jeca": "2", "Rale": "1"}, "odds": {"1": 1.43, "X": 4.6, "2": 8.5, "0-1": 3.55, "0-2": 1.9, "3+": 1.8, "4+": 3.05}, "phase": "E"}, {"n": 83, "grp": "1/16 finala", "date": "čet 02.07.", "time": "21:00", "t1": "Spain", "t2": "Austria", "picks": {"Laza": "1", "Miha": "3+", "Dejo": "1", "Aco": "0-2", "Dača": "4+", "Bota": "0-2", "Steva": "1", "DekiI": "1", "Neša": "3+", "DekiJ": "1", "Stef": "3+", "Anđa": "1", "Srele": "1", "Jeca": "3+", "Rale": "4+"}, "odds": {"1": 1.32, "X": 5.25, "2": 10, "0-1": 3.3, "0-2": 1.8, "3+": 1.9, "4+": 3.25}, "phase": "E"}, {"n": 84, "grp": "1/16 finala", "date": "pet 03.07.", "time": "01:00", "t1": "Portugal", "t2": "Croatia", "picks": {"Laza": "3+", "Miha": "0-1", "Dejo": "1", "Aco": "0-1", "Dača": "X", "Bota": "X", "Steva": "X", "DekiI": "X", "Neša": "X", "DekiJ": "3+", "Stef": "X", "Anđa": "X", "Srele": "X", "Jeca": "4+", "Rale": "X"}, "odds": {"1": 1.95, "X": 3.4, "2": 4.1, "0-1": 2.8, "0-2": 1.62, "3+": 2.15, "4+": 4}, "phase": "E"}, {"n": 85, "grp": "1/16 finala", "date": "pet 03.07.", "time": "05:00", "t1": "Switzerland", "t2": "Algeria", "picks": {"Laza": "0-2", "Miha": "1", "Dejo": "1", "Aco": "0-2", "Dača": "1", "Bota": "1", "Steva": "1", "DekiI": "X", "Neša": "1", "DekiJ": "3+", "Stef": "X", "Anđa": "1", "Srele": "X", "Jeca": "1", "Rale": "X"}, "odds": {"1": 1.95, "X": 3.45, "2": 4, "0-1": 3.2, "0-2": 1.76, "3+": 1.95, "4+": 3.45}, "phase": "E"}, {"n": 86, "grp": "1/16 finala", "date": "pet 03.07.", "time": "20:00", "t1": "Australia", "t2": "Egypt", "picks": {"Laza": "0-2", "Miha": "4+", "Dejo": "2", "Aco": "X", "Dača": "2", "Bota": "2", "Steva": "X", "DekiI": "X", "Neša": "X", "DekiJ": "2", "Stef": "2", "Anđa": "X", "Srele": "2", "Jeca": "1", "Rale": "X"}, "odds": {"1": 3.15, "X": 2.95, "2": 2.55, "0-1": 2.19, "0-2": 1.41, "3+": 2.7, "4+": 5.4}, "phase": "E"}, {"n": 87, "grp": "1/16 finala", "date": "sub 04.07.", "time": "00:00", "t1": "Argentina", "t2": "Cape Verde", "picks": {"Laza": "3+", "Miha": "1", "Dejo": "X", "Aco": "0-2", "Dača": "4+", "Bota": "0-1", "Steva": "1", "DekiI": "1", "Neša": "0-2", "DekiJ": "3+", "Stef": "X", "Anđa": "3+", "Srele": "3+", "Jeca": "3+", "Rale": "1"}, "odds": {"1": 1.17, "X": 7.5, "2": 16, "0-1": 4, "0-2": 2.19, "3+": 1.6, "4+": 2.5}, "phase": "E"}, {"n": 88, "grp": "1/16 finala", "date": "sub 04.07.", "time": "03:30", "t1": "Colombia", "t2": "Ghana", "picks": {"Laza": "4+", "Miha": "X", "Dejo": "X", "Aco": "X", "Dača": "2", "Bota": "2", "Steva": "1", "DekiI": "X", "Neša": "3+", "DekiJ": "0-2", "Stef": "1", "Anđa": "1", "Srele": "0-2", "Jeca": "3+", "Rale": "1"}, "odds": {"1": 1.7, "X": 3.6, "2": 5.5, "0-1": 2.41, "0-2": 1.53, "3+": 2.35, "4+": 4.6}, "phase": "E"}], "scores": {"1": [2, 0], "2": [2, 1], "3": [1, 1], "4": [4, 1]}, "bonus": {"SPA": 11, "FRA": 12, "ENG": 14, "BRA": 18, "POR": 24, "GER": 26, "NED": 40}};
+const ISO = {"Algeria": "dz", "Argentina": "ar", "Australia": "au", "Austria": "at", "Belgium": "be", "Bosnia & Herzegovina": "ba", "Brazil": "br", "Canada": "ca", "Cape Verde": "cv", "Colombia": "co", "Croatia": "hr", "Curacao": "cw", "Czech Republic": "cz", "DR Congo": "cd", "Ecuador": "ec", "Egypt": "eg", "England": "gb-eng", "France": "fr", "Germany": "de", "Ghana": "gh", "Haiti": "ht", "Iran": "ir", "Iraq": "iq", "Ivory Coast": "ci", "Japan": "jp", "Jordan": "jo", "Mexico": "mx", "Morocco": "ma", "Netherlands": "nl", "New Zealand": "nz", "Norway": "no", "Panama": "pa", "Paraguay": "py", "Portugal": "pt", "Qatar": "qa", "Saudi Arabia": "sa", "Scotland": "gb-sct", "Senegal": "sn", "South Africa": "za", "South Korea": "kr", "Spain": "es", "Sweden": "se", "Switzerland": "ch", "Tunisia": "tn", "Turkey": "tr", "USA": "us", "Uruguay": "uy", "Uzbekistan": "uz"};
+const fimg = (iso,alt) => iso ? '<img class="flagi" src="https://flagcdn.com/'+iso+'.svg" alt="'+(alt||"")+'" loading="lazy" onerror="this.style.display=&quot;none&quot;">' : "";
+const FLAGS_UNUSED = {"Algeria": "🇩🇿", "Argentina": "🇦🇷", "Australia": "🇦🇺", "Austria": "🇦🇹", "Belgium": "🇧🇪", "Bosnia & Herzegovina": "🇧🇦", "Brazil": "🇧🇷", "Canada": "🇨🇦", "Cape Verde": "🇨🇻", "Colombia": "🇨🇴", "Croatia": "🇭🇷", "Curacao": "🇨🇼", "Czech Republic": "🇨🇿", "DR Congo": "🇨🇩", "Ecuador": "🇪🇨", "Egypt": "🇪🇬", "England": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "France": "🇫🇷", "Germany": "🇩🇪", "Ghana": "🇬🇭", "Haiti": "🇭🇹", "Iran": "🇮🇷", "Iraq": "🇮🇶", "Ivory Coast": "🇨🇮", "Japan": "🇯🇵", "Jordan": "🇯🇴", "Mexico": "🇲🇽", "Morocco": "🇲🇦", "Netherlands": "🇳🇱", "New Zealand": "🇳🇿", "Norway": "🇳🇴", "Panama": "🇵🇦", "Paraguay": "🇵🇾", "Portugal": "🇵🇹", "Qatar": "🇶🇦", "Saudi Arabia": "🇸🇦", "Scotland": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Senegal": "🇸🇳", "South Africa": "🇿🇦", "South Korea": "🇰🇷", "Spain": "🇪🇸", "Sweden": "🇸🇪", "Switzerland": "🇨🇭", "Tunisia": "🇹🇳", "Turkey": "🇹🇷", "USA": "🇺🇸", "Uruguay": "🇺🇾", "Uzbekistan": "🇺🇿"};
+const flag = t => fimg(ISO[t], "");
+const CHAMP_NAME = {SPA:"Španija",FRA:"Francuska",ENG:"Engleska",BRA:"Brazil",POR:"Portugal",GER:"Nemačka",NED:"Holandija"};
+let CHAMPION = null; // postavi kod osvajača SP (npr. "SPA") da se dodeli bonus
+
+let SCORES = Object.assign({}, DB.scores);  // {broj_meča:[d,g]}
+const reduceMotion = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+const fold = s => (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d");
+const fmt = n => Number.isInteger(n) ? String(n) : n.toFixed(1);
+const r1 = n => Math.round(n*10)/10;
+
+/* ----- bodovanje ----- */
+function isHit(p,s){const g=s[0],a=s[1],tot=g+a,res=g>a?"1":(g<a?"2":"X");
+  if(p==="1"||p==="X"||p==="2")return p===res;
+  if(p==="0-1")return tot<=1; if(p==="0-2")return tot<=2; if(p==="3+")return tot>=3; if(p==="4+")return tot>=4; return false;}
+const scoreOf = m => SCORES[m.n] || null;
+
+function standings(){
+  const rows = DB.players.map(p=>{
+    let pts=0;
+    DB.matches.forEach(m=>{const s=scoreOf(m); if(!s)return; const pk=m.picks[p.nick];
+      if(pk && isHit(pk,s)) pts += (m.odds[pk]||0);});
+    if(CHAMPION && p.champ===CHAMPION) pts += (DB.bonus[p.champ]||0);
+    return {name:p.name, nick:p.nick, champ:p.champ, points:r1(pts)};
+  });
+  return rows.map((d,i)=>({...d,_i:i})).sort((a,b)=> b.points-a.points || a._i-b._i).map((d,i)=>({...d,rank:i+1}));
+}
+const playedCount = () => Object.keys(SCORES).length;
+
+/* ----- PLASMAN ----- */
+function renderPodium(list){
+  const top=list.slice(0,3), order=[top[1],top[0],top[2]], cls=["g2","g1","g3"], medal=["2.","1.","3."];
+  document.getElementById("podium").innerHTML=order.map((d,i)=>{
+    if(!d)return""; 
+    return `<div class="pod ${cls[i]}"><div class="medal">${medal[i]} MESTO</div>
+      <span class="flag" title="Osvajač: ${CHAMP_NAME[d.champ]||d.champ}">${flag2(d.champ)}</span>
+      <div class="nm">${d.name}</div><div class="pts">${fmt(d.points)}</div></div>`;}).join("");
+}
+const CHAMP_SVG={
+SPA:'<svg class="flagi" viewBox="0 0 30 20"><rect width="30" height="20" fill="#c60b1e"/><rect y="5" width="30" height="10" fill="#ffc400"/></svg>',
+FRA:'<svg class="flagi" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#0055a4"/><rect x="20" width="10" height="20" fill="#ef4135"/></svg>',
+ENG:'<svg class="flagi" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect x="13" width="4" height="20" fill="#ce1124"/><rect y="8" width="30" height="4" fill="#ce1124"/></svg>',
+BRA:'<svg class="flagi" viewBox="0 0 30 20"><rect width="30" height="20" fill="#009b3a"/><polygon points="15,2.5 27.5,10 15,17.5 2.5,10" fill="#fedf00"/><circle cx="15" cy="10" r="4.2" fill="#002776"/></svg>',
+POR:'<svg class="flagi" viewBox="0 0 30 20"><rect width="30" height="20" fill="#da291c"/><rect width="12" height="20" fill="#046a38"/><circle cx="12" cy="10" r="3.2" fill="none" stroke="#ffe000" stroke-width="1.5"/></svg>',
+GER:'<svg class="flagi" viewBox="0 0 30 20"><rect width="30" height="20" fill="#000"/><rect y="6.67" width="30" height="6.67" fill="#dd0000"/><rect y="13.34" width="30" height="6.66" fill="#ffce00"/></svg>',
+NED:'<svg class="flagi" viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><rect width="30" height="6.67" fill="#ae1c28"/><rect y="13.33" width="30" height="6.67" fill="#21468b"/></svg>'
+};
+const flag2 = c => CHAMP_SVG[c] || "";
+
+function renderRows(list){
+  const max=Math.max(...list.map(d=>d.points),1);
+  let html="";
+  list.forEach((d,idx)=>{
+    const w=Math.max(4,(d.points/max)*100), delay=reduceMotion?0:Math.min(idx*30,460);
+    html+=`<div class="row" data-nick="${d.nick}" style="animation-delay:${delay}ms">
+      <div class="r-rank">${d.rank}</div>
+      <div class="r-name"><b>${d.name}</b><div class="r-bar"><i data-w="${w}"></i></div></div>
+      <div class="r-pts">${fmt(d.points)}</div>
+      <div class="r-pick" title="Osvajač: ${CHAMP_NAME[d.champ]||d.champ}">${flag2(d.champ)}</div></div>`;
+    if(d.rank===8) html+=`<div class="split"><span>Ispod crte časte u Zapati</span></div>`;
+  });
+  const el=document.getElementById("rows"); el.innerHTML=html;
+  el.onclick=e=>{const r=e.target.closest(".row"); if(r&&r.dataset.nick) openPlayer(r.dataset.nick);};
+  requestAnimationFrame(()=>el.querySelectorAll(".r-bar i").forEach(b=>b.style.width=b.dataset.w+"%"));
+}
+function renderPlasman(){
+  const list=standings();
+  renderRows(list);
+  renderStats();
+  const lead=list[0];
+  if(lead) document.getElementById("leadLine").innerHTML=`Vodi <b style="color:var(--gold)">${lead.name}</b> sa ${fmt(lead.points)} bodova.`;
+  document.getElementById("statusTxt").textContent=`Odigrano ${playedCount()}/${DB.matches.length} mečeva`;
+}
+
+/* ----- statistika ----- */
+function renderStats(){
+  const played = DB.matches.filter(m=>scoreOf(m)).sort((a,b)=>a.n-b.n);
+  const el=document.getElementById("stats");
+  if(!el) return;
+  if(!played.length){ el.innerHTML='<div class="empty">Statistika će se pojaviti kad počnu rezultati.</div>'; return; }
+  const DASH="\u2014", DOT=" \u00b7 ", EN="\u2013";
+  const P = DB.players.map(p=>{
+    let hits=0,tips=0,runH=0,curH=0,runM=0,curM=0;
+    played.forEach(m=>{
+      const pk=m.picks[p.nick]; if(pk===undefined) return;
+      tips++;
+      if(isHit(pk,scoreOf(m))){hits++;curH++;curM=0;if(curH>runH)runH=curH;}
+      else{curM++;curH=0;if(curM>runM)runM=curM;}
+    });
+    return {name:p.name,hits,tips,rate:tips?hits/tips:0,runH,runM};
+  });
+  const names = w => w.map(x=>x.name).join(", ");
+  const leadBy = k => { const mx=Math.max(...P.map(x=>x[k])); return {val:mx, who:P.filter(x=>x[k]===mx)}; };
+  const pr=leadBy("rate"), rh=leadBy("runH"), rm=leadBy("runM");
+  let bo=0, bev=[];
+  played.forEach(m=>DB.players.forEach(p=>{const pk=m.picks[p.nick]; if(pk===undefined)return;
+    if(isHit(pk,scoreOf(m))){const o=m.odds[pk]||0; if(o>bo){bo=o;bev=[];} if(o===bo) bev.push({name:p.name,pick:pk,match:m.t1+EN+m.t2});}}));
+  const w0=pr.who[0];
+  const card=(i,l,v,s)=>`<div class="stat"><div class="stat-h">${i} ${l}</div><div class="stat-v">${v}</div><div class="stat-s">${s}</div></div>`;
+  const ulovSub = bev.length===1 ? `${bev[0].name}${DOT}tip ${bev[0].pick}${DOT}${bev[0].match}`
+                                 : bev.map(e=>`${e.name} (${e.pick}, ${e.match})`).join(", ");
+  el.innerHTML=
+    card("\uD83C\uDFAF","Najprecizniji", `${Math.round(pr.val*100)}% (${w0.hits}/${w0.tips})`, names(pr.who))+
+    card("\uD83D\uDCB0","Najveći ulov", bo?bo.toFixed(1):DASH, bo?ulovSub:DASH)+
+    card("\uD83D\uDD25","Najduži niz pogodaka", rh.val||0, rh.val?names(rh.who):DASH)+
+    card("\u2744\uFE0F","Najhladniji niz", rm.val||0, rm.val?names(rm.who):DASH);
+}
+
+/* ----- PROGNOZE ----- */
+const TCLASS={"1":"t1","X":"tX","2":"t2","0-1":"t01","0-2":"t02","3+":"t3","4+":"t4"};
+let grpFilter="*", playedF="all", phaseF="all", prognozeReady=false;
+function initPrognoze(){
+  const groups=[...new Set(DB.matches.filter(m=>m.phase==="G").map(m=>m.grp))];
+  const gb=document.getElementById("grpbar");
+  gb.innerHTML=`<button class="gchip" data-g="*" aria-pressed="true">Sve grupe</button>`+
+    groups.map(g=>`<button class="gchip" data-g="${g}" aria-pressed="false">Grupa ${g}</button>`).join("");
+  gb.querySelectorAll(".gchip").forEach(b=>b.addEventListener("click",()=>{
+    grpFilter=b.dataset.g; gb.querySelectorAll(".gchip").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false")); renderCards();}));
+  const sel=document.getElementById("hlPlayer");
+  DB.players.forEach(p=>{const o=document.createElement("option");o.value=p.nick;o.textContent=p.name;sel.appendChild(o);});
+  sel.addEventListener("change",renderCards);
+  document.getElementById("msearch").addEventListener("input",renderCards);
+  const pf=document.getElementById("playedFilter"); pf.querySelectorAll(".segb").forEach(b=>b.addEventListener("click",()=>{playedF=b.dataset.pf; pf.querySelectorAll(".segb").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false")); renderCards();}));
+  const phb=document.getElementById("phaseFilter"); phb.querySelectorAll(".segb").forEach(b=>b.addEventListener("click",()=>{phaseF=b.dataset.ph; phb.querySelectorAll(".segb").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false")); const gb2=document.getElementById("grpbar"); if(phaseF==="E"){gb2.style.display="none"; grpFilter="*"; gb2.querySelectorAll(".gchip").forEach(x=>x.setAttribute("aria-pressed",x.dataset.g==="*"?"true":"false"));} else {gb2.style.display="";} renderCards();}));
+}
+function renderCards(){
+  const q=fold(document.getElementById("msearch").value.trim());
+  const hl=document.getElementById("hlPlayer").value;
+  const list=DB.matches.filter(m=>{
+    if(phaseF==="G"&&m.phase!=="G")return false; if(phaseF==="E"&&m.phase!=="E")return false; if(phaseF!=="E"&&grpFilter!=="*"&&m.grp!==grpFilter)return false;
+    if(playedF==="played"&&!scoreOf(m))return false; if(playedF==="unplayed"&&scoreOf(m))return false;
+    if(q&&!(fold(m.t1).includes(q)||fold(m.t2).includes(q)))return false; return true;});
+  const el=document.getElementById("cards");
+  if(!list.length){el.innerHTML=`<div class="empty">Nema mečeva za izabrane filtere.</div>`;return;}
+  el.innerHTML=list.map((m,idx)=>{
+    const s=scoreOf(m), delay=reduceMotion?0:Math.min(idx*18,360);
+    const score=s?`<span class="vs scr">${s[0]} : ${s[1]}</span>`:`<span class="vs">vs</span>`;
+    const chips=DB.players.map(p=>{const pk=m.picks[p.nick]; if(pk===undefined)return"";
+      const cls=TCLASS[pk]||""; let extra=""; if(s) extra=isHit(pk,s)?" hit":" miss"; if(hl&&p.nick===hl) extra+=" hl";
+      return `<span class="pchip ${cls}${extra}" title="${p.name} · tip ${pk}"><b>${p.nick}</b><s>${pk}</s><span class="od">(${m.odds[pk]})</span></span>`;}).join("");
+    return `<div class="mcard ${s?'done':''}" style="animation-delay:${delay}ms">
+      <div class="mtop"><span class="mnum">#${m.n}</span><span class="mgrp">${m.phase==="E"?m.grp:"Grupa "+m.grp}</span><span class="mdate">${m.date} · ${m.time}</span></div>
+      <div class="mteams"><div class="tm home"><span class="nm">${m.t1}</span><span class="fl">${flag(m.t1)}</span></div>
+        ${score}<div class="tm"><span class="fl">${flag(m.t2)}</span><span class="nm">${m.t2}</span></div></div>
+      <div class="picks">${chips}</div></div>`;}).join("");
+}
+
+/* ----- detalji igrača ----- */
+function openPlayer(nick){
+  const p=DB.players.find(x=>x.nick===nick); if(!p) return;
+  const ms=DB.matches.slice().sort((a,b)=>a.n-b.n);
+  let hits=0,tips=0,pts=0;
+  const rows=ms.map(m=>{
+    const pk=m.picks[nick], s=scoreOf(m), cls=TCLASS[pk]||"";
+    let res="",state="";
+    if(s){const ok=isHit(pk,s); state=ok?"hit":"miss"; res=`<span class="pm-res">${s[0]}:${s[1]}</span>`; tips++; if(ok){hits++;pts+=(m.odds[pk]||0);}}
+    return `<div class="pm-row ${state}"><span class="pm-n">#${m.n}</span><span class="pm-teams">${flag(m.t1)} ${m.t1} <i>\u2013</i> ${m.t2} ${flag(m.t2)}</span>${res}<span class="pchip ${cls}"><s>${pk||"\u2013"}</s><span class="od">(${pk?m.odds[pk]:"\u2013"})</span></span></div>`;
+  }).join("");
+  document.getElementById("pmodal-body").innerHTML=`<div class="pm-head">${flag2(p.champ)}<div><b>${p.name}</b><div class="pm-sub">Pogodaka: ${hits}/${tips} \u00b7 Bodova: ${fmt(r1(pts))}</div></div></div><div class="pm-list">${rows}</div>`;
+  const mo=document.getElementById("pmodal"); mo.hidden=false; document.body.style.overflow="hidden";
+}
+function closePlayer(){ document.getElementById("pmodal").hidden=true; document.body.style.overflow=""; }
+document.getElementById("pmodal").addEventListener("click",e=>{ if(e.target.hasAttribute("data-close")) closePlayer(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closePlayer(); });
+
+/* ----- kretanje (race) ----- */
+let raceFrames=[], raceI=0, raceTimer=null, raceBuilt=false;
+const avatarColor=i=>`hsl(${(i*53)%360} 70% 62%)`;
+const initials=n=>n.split(" ").map(w=>w[0]).slice(0,2).join("");
+function buildRace(){
+  const played=DB.matches.filter(m=>scoreOf(m)).sort((a,b)=>a.n-b.n);
+  const race=document.getElementById("race"), slider=document.getElementById("raceSlider");
+  if(!played.length){ race.innerHTML='<div class="empty">Grafikon će se pojaviti kad počnu rezultati.</div>'; race.style.height="auto"; document.getElementById("raceLabel").textContent="\u2014"; slider.max=1; return; }
+  const cum={}; DB.players.forEach(p=>cum[p.nick]=0); raceFrames=[];
+  played.forEach(m=>{
+    DB.players.forEach(p=>{const pk=m.picks[p.nick]; if(pk&&isHit(pk,scoreOf(m))) cum[p.nick]+=(m.odds[pk]||0);});
+    raceFrames.push({label:`Posle #${m.n}: ${m.t1}\u2013${m.t2}`, pts:DB.players.map((p,i)=>({i,nick:p.nick,name:p.name,v:r1(cum[p.nick])}))});
+  });
+  race.style.height=(DB.players.length*30)+"px";
+  race.innerHTML=DB.players.map((p,i)=>`<div class="race-row" data-nick="${p.nick}"><div class="race-av" style="background:${avatarColor(i)}">${initials(p.name)}</div><div class="race-name">${p.nick}</div><div class="race-track"><div class="race-fill" style="background:${avatarColor(i)}"></div></div><div class="race-pts">0</div></div>`).join("");
+  slider.max=raceFrames.length; raceBuilt=true; showFrame(raceFrames.length-1);
+}
+function showFrame(idx){
+  if(!raceFrames.length) return;
+  idx=Math.max(0,Math.min(idx,raceFrames.length-1)); raceI=idx;
+  const fr=raceFrames[idx], ranked=fr.pts.slice().sort((a,b)=>b.v-a.v||a.i-b.i), maxv=Math.max(...fr.pts.map(x=>x.v),1);
+  const rows=[...document.getElementById("race").children];
+  ranked.forEach((d,rank)=>{
+    const row=rows.find(r=>r.dataset.nick===d.nick); if(!row) return;
+    row.style.transform=`translateY(${rank*30}px)`;
+    row.querySelector(".race-fill").style.width=Math.max(2,(d.v/maxv)*100)+"%";
+    row.querySelector(".race-pts").textContent=fmt(d.v);
+  });
+  document.getElementById("raceLabel").textContent=fr.label;
+  document.getElementById("raceSlider").value=idx+1;
+}
+function racePlay(){
+  if(!raceFrames.length) return;
+  const btn=document.getElementById("racePlay");
+  if(raceTimer){clearInterval(raceTimer);raceTimer=null;btn.textContent="\u25B6 Pusti";return;}
+  if(raceI>=raceFrames.length-1) showFrame(0);
+  btn.textContent="\u23F8 Pauza";
+  raceTimer=setInterval(()=>{ if(raceI>=raceFrames.length-1){clearInterval(raceTimer);raceTimer=null;btn.textContent="\u25B6 Pusti";return;} showFrame(raceI+1); },900);
+}
+document.getElementById("racePlay").addEventListener("click",racePlay);
+document.getElementById("raceSlider").addEventListener("input",e=>{ if(raceTimer){clearInterval(raceTimer);raceTimer=null;document.getElementById("racePlay").textContent="\u25B6 Pusti";} showFrame(+e.target.value-1); });
+
+/* ----- tabovi ----- */
+const tabs=[["tab-plasman","view-plasman"],["tab-prognoze","view-prognoze"],["tab-statistika","view-statistika"],["tab-kretanje","view-kretanje"]];
+function selectTab(id){
+  tabs.forEach(([t,v])=>{const on=t===id;document.getElementById(t).setAttribute("aria-selected",on?"true":"false");document.getElementById(v).classList.toggle("active",on);});
+  if(id==="tab-prognoze"&&!prognozeReady){initPrognoze();renderCards();prognozeReady=true;}
+  if(id==="tab-statistika") renderStats();
+  if(id==="tab-kretanje") buildRace();
+  history.replaceState(null,"",{"tab-plasman":"#plasman","tab-prognoze":"#prognoze","tab-statistika":"#statistika","tab-kretanje":"#kretanje"}[id]);
+}
+tabs.forEach(([t])=>document.getElementById(t).addEventListener("click",()=>selectTab(t)));
+
+/* automatsko čitanje scores.json (ako postoji pored stranice) */
+fetch("./scores.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{
+  if(j&&typeof j==="object"){SCORES=Object.assign({},DB.scores,j);renderPlasman();if(prognozeReady)renderCards();}
+}).catch(()=>{});
+
+renderPlasman();
+if(location.hash==="#prognoze") selectTab("tab-prognoze"); else if(location.hash==="#statistika") selectTab("tab-statistika"); else if(location.hash==="#kretanje") selectTab("tab-kretanje");
+</script>
+</body>
+</html>
