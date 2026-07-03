@@ -61,7 +61,7 @@
   .pod .pts small{font-size:13px;color:var(--muted);font-weight:500;margin-left:4px}
 
   .table{background:var(--pitch-850);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
-  .thead,.row{display:grid;grid-template-columns:46px 1fr 92px 64px;align-items:center;gap:8px}
+  .thead,.row{display:grid;grid-template-columns:46px 1fr 84px 86px;align-items:center;gap:8px}
   .thead{padding:13px 18px;border-bottom:1px solid var(--line);font-family:'Oswald',sans-serif;font-weight:600;
     letter-spacing:.12em;text-transform:uppercase;font-size:11px;color:var(--muted)}
   .thead .r-pts,.thead .r-pick{text-align:center}
@@ -77,7 +77,8 @@
   .r-bar{height:4px;background:rgba(255,255,255,.07);border-radius:3px;margin-top:6px;overflow:hidden;max-width:220px}
   .r-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold));border-radius:3px;width:0;transition:width .7s cubic-bezier(.2,.7,.2,1)}
   .row .r-pts{font-family:'Oswald',sans-serif;font-weight:700;font-size:20px;text-align:center;color:#fff}
-  .row .r-pick{text-align:center;line-height:0}
+  .row .r-pick{display:flex;align-items:center;justify-content:center;gap:5px;line-height:1}
+  .champ-odds{font-family:'Oswald',sans-serif;font-weight:600;font-size:13px;color:var(--muted)}
   .flagi{display:inline-block;width:24px;height:18px;border-radius:3px;object-fit:cover;overflow:hidden;vertical-align:middle;box-shadow:0 0 0 1px rgba(255,255,255,.16);background:rgba(255,255,255,.05)}
   .row .r-pick .flagi{width:28px;height:21px}
   .tm .flagi{width:28px;height:21px}
@@ -212,7 +213,7 @@
     .pod{display:flex;align-items:center;gap:14px;text-align:left;padding:14px 16px!important}
     .pod::before{inset:0 auto 0 0;width:4px;height:auto}
     .pod .flag{margin:0}.pod .flag .flagi{width:34px;height:25px}.pod .nm{min-height:0;justify-content:flex-start;flex:1}.pod .pts{margin:0}
-    .thead,.row{grid-template-columns:36px 1fr 64px 44px}
+    .thead,.row{grid-template-columns:34px 1fr 58px 66px}
     .tm{font-size:14px}.tm .fl{font-size:21px}
     .mdate{flex-basis:100%;margin-left:0;margin-top:2px}
   }
@@ -356,7 +357,7 @@ function renderRows(list){
       <div class="r-rank">${d.rank}</div>
       <div class="r-name"><b>${d.name}</b><div class="r-bar"><i data-w="${w}"></i></div></div>
       <div class="r-pts">${fmt(d.points)}</div>
-      <div class="r-pick" title="Osvajač: ${CHAMP_NAME[d.champ]||d.champ}">${flag2(d.champ)}</div></div>`;
+      <div class="r-pick" title="Osvajač: ${CHAMP_NAME[d.champ]||d.champ} · bonus ${DB.bonus[d.champ]||0} bod. ako osvoji">${flag2(d.champ)}<span class="champ-odds">${DB.bonus[d.champ]||""}</span></div></div>`;
     if(d.rank===8) html+=`<div class="split"><span>Ispod crte časte u Zapati</span></div>`;
   });
   const el=document.getElementById("rows"); el.innerHTML=html;
