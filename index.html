@@ -78,6 +78,15 @@
   .r-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold));border-radius:3px;width:0;transition:width .7s cubic-bezier(.2,.7,.2,1)}
   .row .r-pts{font-family:'Oswald',sans-serif;font-weight:700;font-size:20px;text-align:center;color:#fff}
   .row .r-pick{display:flex;align-items:center;justify-content:center;gap:5px;line-height:1}
+  .champ-banner{display:flex;align-items:center;gap:13px;background:linear-gradient(135deg,rgba(245,200,75,.16),rgba(245,200,75,.05));border:1px solid rgba(245,200,75,.4);border-radius:var(--r);padding:14px 16px;margin-bottom:16px}
+  .champ-banner[hidden]{display:none}
+  .champ-banner .cb-tro{font-size:27px;line-height:1}
+  .champ-banner b{font-family:'Oswald',sans-serif;font-weight:700;font-size:17px;letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+  .champ-banner .cb-sub{color:var(--muted);font-size:12.5px;margin-top:2px}
+  .champ-banner .flagi{width:30px;height:22px}
+  .r-pick.won .flagi{box-shadow:0 0 0 2px var(--gold),0 0 10px rgba(245,200,75,.55)}
+  .r-pick.won .champ-odds{color:var(--gold)}
+  .row.champ{background:rgba(245,200,75,.07)}
   .champ-odds{font-family:'Oswald',sans-serif;font-weight:600;font-size:13px;color:var(--muted)}
   .flagi{display:inline-block;width:24px;height:18px;border-radius:3px;object-fit:cover;overflow:hidden;vertical-align:middle;box-shadow:0 0 0 1px rgba(255,255,255,.16);background:rgba(255,255,255,.05)}
   .row .r-pick .flagi{width:28px;height:21px}
@@ -238,6 +247,7 @@
 
   <!-- PLASMAN -->
   <section class="view active" id="view-plasman" role="tabpanel" aria-labelledby="tab-plasman">
+    <div class="champ-banner" id="champBanner" hidden></div>
     <div class="table" role="table" aria-label="Plasman">
       <div class="thead" role="row">
         <div role="columnheader">#</div><div role="columnheader">Takmičar</div>
@@ -303,7 +313,7 @@ const fimg = (iso,alt) => iso ? '<img class="flagi" src="https://flagcdn.com/'+i
 const FLAGS_UNUSED = {"Algeria": "🇩🇿", "Argentina": "🇦🇷", "Australia": "🇦🇺", "Austria": "🇦🇹", "Belgium": "🇧🇪", "Bosnia & Herzegovina": "🇧🇦", "Brazil": "🇧🇷", "Canada": "🇨🇦", "Cape Verde": "🇨🇻", "Colombia": "🇨🇴", "Croatia": "🇭🇷", "Curacao": "🇨🇼", "Czech Republic": "🇨🇿", "DR Congo": "🇨🇩", "Ecuador": "🇪🇨", "Egypt": "🇪🇬", "England": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "France": "🇫🇷", "Germany": "🇩🇪", "Ghana": "🇬🇭", "Haiti": "🇭🇹", "Iran": "🇮🇷", "Iraq": "🇮🇶", "Ivory Coast": "🇨🇮", "Japan": "🇯🇵", "Jordan": "🇯🇴", "Mexico": "🇲🇽", "Morocco": "🇲🇦", "Netherlands": "🇳🇱", "New Zealand": "🇳🇿", "Norway": "🇳🇴", "Panama": "🇵🇦", "Paraguay": "🇵🇾", "Portugal": "🇵🇹", "Qatar": "🇶🇦", "Saudi Arabia": "🇸🇦", "Scotland": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Senegal": "🇸🇳", "South Africa": "🇿🇦", "South Korea": "🇰🇷", "Spain": "🇪🇸", "Sweden": "🇸🇪", "Switzerland": "🇨🇭", "Tunisia": "🇹🇳", "Turkey": "🇹🇷", "USA": "🇺🇸", "Uruguay": "🇺🇾", "Uzbekistan": "🇺🇿"};
 const flag = t => fimg(ISO[t], "");
 const CHAMP_NAME = {SPA:"Španija",FRA:"Francuska",ENG:"Engleska",BRA:"Brazil",POR:"Portugal",GER:"Nemačka",NED:"Holandija"};
-let CHAMPION = null; // postavi kod osvajača SP (npr. "SPA") da se dodeli bonus
+let CHAMPION = "SPA"; // osvajač SP 2026 — bonus se dodeljuje automatski
 
 let SCORES = Object.assign({}, DB.scores);  // {broj_meča:[d,g]}
 const reduceMotion = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
@@ -354,11 +364,11 @@ function renderRows(list){
   let html="";
   list.forEach((d,idx)=>{
     const w=Math.max(4,(d.points/max)*100), delay=reduceMotion?0:Math.min(idx*30,460);
-    html+=`<div class="row" data-nick="${d.nick}" style="animation-delay:${delay}ms">
+    html+=`<div class="row ${d.champ===CHAMPION?"champ":""}" data-nick="${d.nick}" style="animation-delay:${delay}ms">
       <div class="r-rank">${d.rank}</div>
       <div class="r-name"><b>${d.name}</b><div class="r-bar"><i data-w="${w}"></i></div></div>
       <div class="r-pts">${fmt(d.points)}</div>
-      <div class="r-pick" title="Osvajač: ${CHAMP_NAME[d.champ]||d.champ} · bonus ${DB.bonus[d.champ]||0} bod. ako osvoji">${flag2(d.champ)}<span class="champ-odds">${DB.bonus[d.champ]||""}</span></div></div>`;
+      <div class="r-pick ${d.champ===CHAMPION?"won":""}" title="${d.champ===CHAMPION?"Pogodio prvaka: "+(CHAMP_NAME[d.champ]||d.champ)+" \u00b7 +"+(DB.bonus[d.champ]||0)+" bodova":"Osvajač: "+(CHAMP_NAME[d.champ]||d.champ)+" \u00b7 bonus "+(DB.bonus[d.champ]||0)+" bod. ako osvoji"}">${flag2(d.champ)}<span class="champ-odds">${d.champ===CHAMPION?"+"+(DB.bonus[d.champ]||0):(DB.bonus[d.champ]||"")}</span></div></div>`;
     if(d.rank===8) html+=`<div class="split"><span>Ispod crte časte u Zapati</span></div>`;
   });
   const el=document.getElementById("rows"); el.innerHTML=html;
@@ -368,6 +378,14 @@ function renderRows(list){
 function renderPlasman(){
   const list=standings();
   renderRows(list);
+  const cb=document.getElementById("champBanner");
+  if(cb){
+    if(CHAMPION){
+      const w=list.filter(x=>x.champ===CHAMPION);
+      cb.hidden=false;
+      cb.innerHTML=`<span class="cb-tro">\uD83C\uDFC6</span><div><b>${flag2(CHAMPION)} ${CHAMP_NAME[CHAMPION]||CHAMPION} \u2014 prvak sveta</b><div class="cb-sub">${w.length?`+${DB.bonus[CHAMPION]||0} bodova za: ${w.map(x=>x.name).join(", ")}`:"niko nije pogodio prvaka"}</div></div>`;
+    } else cb.hidden=true;
+  }
   renderStats();
   const lead=list[0];
   if(lead) document.getElementById("leadLine").innerHTML=`Vodi <b style="color:var(--gold)">${lead.name}</b> sa ${fmt(lead.points)} bodova.`;
@@ -535,5 +553,4 @@ if(location.hash==="#prognoze") selectTab("tab-prognoze"); else if(location.hash
 </script>
 </body>
 </html>
-
 
